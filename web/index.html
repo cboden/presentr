@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en" xmlns:ng="http://angularjs.org/" ng-app="slides">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title></title>
+</head>
+
+<body ng-controller="SlideCtrl">
+
+    <slide title="first">
+    </slide>
+
+    <slide title="second">
+    </slide>
+
+    <div id="slideCounter">{{currentSlide}} / {{slideCount}}</div>
+</body>
+
+    <script src="jquery-1.9.1.js"></script>
+    <script src="angular.js" ng:autobind></script>
+    <script src="syntaxhighlighter/shCore.js"></script>
+    <script src="syntaxhighlighter/shBrushJScript.js"></script>
+    <script src="syntaxhighlighter/shBrushXml.js"></script>
+
+    <link rel="stylesheet" href="style.css" type="text/css"/>
+    <link rel="stylesheet" href="css/shCore.css" type="text/css"/>
+    <link rel="stylesheet" href="css/shThemeDefault.css" type="text/css"/>
+
+    <script src="slide.js"></script>
+</html>
