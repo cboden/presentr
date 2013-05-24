@@ -1,3 +1,5 @@
+'use strict';
+
 function addCssRules(stylesheet, rules) {
 	angular.forEach(rules, function(rule, selector) {
 		var ruleString = '';
@@ -18,8 +20,7 @@ function addCssRules(stylesheet, rules) {
 function addCssRule(styleSheet, selector, rule) {
 	if (styleSheet.insertRule) {
 		styleSheet.insertRule(selector + '{' + rule + '}', styleSheet.cssRules.length);
-	}
-	else { /* IE */
+	} else { /* IE */
 		styleSheet.addRule(selector, rule, -1);
 	}
 }
