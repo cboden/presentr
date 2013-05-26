@@ -12,7 +12,7 @@ use React\Socket\Server as Reactor;
     $delegates = (new Slide\ControllableComposite);
     $delegates->add($show)->add($notes);
 
-    $app = new Ratchet\App('localhost', 8080, '0.0.0.0', $loop);
+    $app = new Ratchet\App('localhost', 8080, '127.0.0.1', $loop);
     $app->route('/', $show);
     $app->route('/notes', $notes);
     $app->route('/control', new Slide\RemoteControl($delegates));

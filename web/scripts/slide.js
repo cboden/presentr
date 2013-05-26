@@ -35,7 +35,7 @@ angular.module('slides', [])
     }
 })
 
-.service('live', function($q, $rootScope) {
+.service('live', function($rootScope, $location) {
     var conn;
     var lastTopic;
 
@@ -44,7 +44,7 @@ angular.module('slides', [])
             return;
         }
 
-        conn = new ab.Session('ws://localhost:8080' + addPath, function() {
+        conn = new ab.Session('ws://' + $location.host() + addPath, function() {
             $rootScope.$broadcast('event:live-connected');
         }, function(code) {
             $rootScope.$broadcast('event:live-disconnect');

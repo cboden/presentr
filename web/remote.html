@@ -35,7 +35,7 @@ $(document).ready(function($) {
         e.preventDefault();
         
         var password = $('#password').val();
-        conn = new WebSocket('ws://localhost:8080/control', [password]);
+        conn = new WebSocket('ws://192.168.1.101/control', [password]);
 
         conn.onopen = function() {
             $('#remote').show();
