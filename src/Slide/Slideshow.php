@@ -35,15 +35,19 @@ class Slideshow implements WampServerInterface, Controllable {
                 $this->_remoteTopic = $topic;
             }
 
-            $this->evRemote();
+            return $this->evRemote();
         }
+
+        $topic->broadcast(array('peers' => $topic->count() - 1));
     }
 
     public function onUnSubscribe(Conn $conn, $topic) {
-    echo "unsub from topic {$topic}\n";
+        echo "unsub from topic {$topic}\n";
         if (self::TPC_REMOTE == $topic->getId()) {
-            $this->evRemote();
+            return $this->evRemote();
         }
+
+        $topic->broadcast(array('peers' => $topic->count() - 1));
     }
 
     public function onError(Conn $conn, \Exception $e) {
@@ -62,6 +66,11 @@ class Slideshow implements WampServerInterface, Controllable {
     public function disableRemote() {
         $this->_controlled = false;
         $this->evRemote();
+    }
+
+    public function onTelnetData($data) {
+        // sanatize and redirect data to websocket topic
+        echo "Telnet data: {$data}";
     }
     
     protected function evRemote($command = '') {

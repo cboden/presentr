@@ -62,7 +62,7 @@ angular.module('slides', [])
 
 .service('live', function($q, $rootScope) {
     var conn;
-    var subscriptions = {};
+    var lastTopic;
 
     this.connect = function() {
         if (conn && (conn._websocket && conn._websocket.readyState != 3)) {
@@ -83,7 +83,12 @@ angular.module('slides', [])
     }
 
     this.singleSubscribe = function(topic, callback) {
-        // here
+        if (lastTopic) {
+            conn.unsubscribe(lastTopic);
+        }
+
+        conn.subscribe(topic, callback);
+        lastTopic = topic;
     }
 })
 
@@ -126,11 +131,18 @@ angular.module('slides', [])
 	var oldHash = $location.hash();
 	var oldCurrentSlide;
 
+    var onSlideMessage = function(topic, msg) {
+        $scope.peers = msg.peers;
+        $scope.$apply();
+    }
+
     $scope.peers = 0;
 	$rootScope.slideCount = 0;
 	$rootScope.currentSlide = 1;
 
-	// create websocket handling function
+    $rootScope.$on('event:live-connected', function() {
+        live.singleSubscribe('slide' + $rootScope.currentSlide, onSlideMessage);
+    });
 
 	if ($location.hash()) {
 		$rootScope.currentSlide = oldCurrentSlide = parseInt($location.hash(), 10);
@@ -146,8 +158,11 @@ angular.module('slides', [])
 		} else if ($rootScope.currentSlide != oldCurrentSlide){
 			$location.hash(($rootScope.currentSlide > 1) ? $rootScope.currentSlide : '');
 		}
-		
-		//console.log('slide moved');
+
+        // I wanted to use topic strings on slide to identify their topic subscriptions
+        // but have been unsuccessful in binding a data attribute to scope
+        // So I'm using the number to do so...which will cause problems if the slides get re-ordered...
+		live.singleSubscribe('slide' + $rootScope.currentSlide, onSlideMessage);
 
 		oldHash = $location.hash();
 		oldCurrentSlide = $rootScope.currentSlide;
@@ -155,11 +170,13 @@ angular.module('slides', [])
 
 })
 
+/*
 .controller('slideIntro', function($scope, live) {
     live.singleSubscribe('intro', function() {
         console.log('message from intro channel');
     });
 })
+*/
 
 .directive('body', function() {
 	return {
@@ -334,6 +351,23 @@ angular.module('slides', [])
 	};
 })
 
+/*
+.directive('topic', function() {
+    return {
+        restrict: 'A',
+        scope: {
+            topic: '='
+        }
+    }
+})
+*/
+
+// I've been attempting to bind a topic attribute to the controller $scope
+// but haven't had any success.
+// I think this is because the SlideCtrl is scoped for all slides, not the 
+// current slide. 
+
+
 .directive('slide', function($rootScope) {
 	return {
 		restrict: 'E',
@@ -348,7 +382,6 @@ angular.module('slides', [])
 			var slideState;
 
 			element.attr('slide-id', slideId);
-
 			if (!scope.title) {
 				element.addClass('no-title');
 			}
