@@ -4,6 +4,11 @@ use Ratchet\ConnectionInterface as Conn;
 use Ratchet\Wamp\WampServerInterface;
 
 class SpeakerNotes implements WampServerInterface, Controllable {
+    const TPC_REMOTE = 'ctrl:remote';
+
+    protected $_remoteTopic = null;
+    protected $_controlled  = false;
+
     public function onPublish(Conn $conn, $topic, $event, array $exclude = array(), array $eligible = array()) {
     }
 
@@ -18,7 +23,13 @@ class SpeakerNotes implements WampServerInterface, Controllable {
     }
 
     public function onSubscribe(Conn $conn, $topic) {
-        echo "Conn subscribed to speakerNotes:{$topic}\n";
+        if (self::TPC_REMOTE == $topic->getId()) {
+            if (null === $this->_remoteTopic) {
+                $this->_remoteTopic = $topic;
+            }
+
+            return $this->evRemote();
+        }
     }
 
     public function onUnSubscribe(Conn $conn, $topic) {
@@ -29,14 +40,28 @@ class SpeakerNotes implements WampServerInterface, Controllable {
     }
 
     public function command($directive) {
-        
+        $this->evRemote($directive);
     }
 
     public function enableRemote() {
-        
+        $this->_controlled = true;
+        $this->evRemote();
     }
     
     public function disableRemote() {
-        
+        $this->_controlled = false;
+        $this->evRemote();
+    }
+
+    protected function evRemote($command = '') {
+        if (!$this->_remoteTopic) {
+            return;
+        }
+
+        $this->_remoteTopic->broadcast(array(
+            'remote'  => (int)$this->_controlled
+          , 'peers'   => 0
+          , 'command' => $command
+        ));
     }
 }

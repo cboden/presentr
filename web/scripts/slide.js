@@ -44,7 +44,7 @@ angular.module('slides', [])
             return;
         }
 
-        conn = new ab.Session('ws://localhost:8080', function() {
+        conn = new ab.Session('ws://localhost:8080' + addPath, function() {
             $rootScope.$broadcast('event:live-connected');
         }, function(code) {
             $rootScope.$broadcast('event:live-disconnect');
@@ -103,6 +103,9 @@ angular.module('slides', [])
 })
 
 .controller('SlideCtrl', function($scope, $location, $rootScope, live) {
+    $scope.host   = 'localhost';
+    $scope.ip     = '127.0.0.1';
+
 	var oldHash = $location.hash();
 	var oldCurrentSlide;
 

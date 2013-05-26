@@ -2,7 +2,7 @@
 <html lang="en" xmlns:ng="http://angularjs.org/" ng-app="slides">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title></title>
+    <title>React</title>
 </head>
 
 <body ng-controller="SlideCtrl">
@@ -59,12 +59,49 @@
         <center><img src="img/cgi.png"></center>
     </slide>
 
+    <!-- demonstrate blocking -->
+    <!-- what is the reactor pattern? -->
+
+    <slide title="Peel away the browser" class="terminal">
+    
+        <p>$ curl http://{{host}}/hello.php</p>
+    </slide>
+
+    <slide title="Deeper into the rabbit hole" class="terminal">
+        <pre><span class="generated">$</span> telnet {{host}} 80
+<span class="generated">Trying {{ip}}...
+Connected to {{host}}.
+Escape character is '^]'.</span>
+GET / HTTP/1.1
+Host: {{host}}
+⏎</pre>
+    </slide>
+
+    <slide title="Through the looking glass" class="smallerCode">
+        <pre class="code-only smaller">&lt;?php
+require __DIR__ . '/vendor/autoload.php';
+
+$loop = React\EventLoop\Factory::create();
+$socket = new React\Socket\Server($loop);
+
+$socket->on('connection', function ($conn) {
+    $conn->on('data', function ($data) use ($conn) {
+        $conn->write("You said: {$data}");
+    });
+});
+
+$socket->listen(1337, '0.0.0.0');
+$loop->run();</pre>
+        <p class="terminal">$ php goodbye-kansas.php</p>
+    </slide>
+
     <div id="slideCounter">
                          <span ng-controller="OnlineCtrl" title="Live slideshow status">{{status}}</span> 
         &nbsp; -- &nbsp; <span title="Slide number/total">{{currentSlide}} / {{slideCount}}</span> 
         &nbsp; -- &nbsp; <span title="Peers on this slide/overall">{{peers}}/<span ng-controller="OnlineCtrl">{{peers}}</span></span>
     </div>
 </body>
+    <script>var addPath = '';</script>
 
     <script src="scripts/jquery-1.9.1.js"></script>
     <script src="scripts/autobahnjs/autobahn.js"></script>

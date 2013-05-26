@@ -2,7 +2,10 @@
     background-color: #444B3D;
 }
 
-.space h2, .space, .dark, .dark h2, .react, .react h2 {
+.terminal, .terminal h2,
+.space, .space h2,
+.dark, .dark h2,
+.react, .react h2 {
     color: #FFF;
 }
 
@@ -10,7 +13,7 @@
     text-align: right;
 }
 
-.dark {
+.terminal, .dark {
     background-color: #000;
 }
 
@@ -21,4 +24,23 @@
 
 .smaller {
     font-size: 1em;
+}
+
+.terminal, .terminal pre {
+    font-family: Courier New, Courier, monospace;
+}
+.terminal h2 {
+    font-family: auto;
+}
+
+p.terminal {
+    padding: 0.5em;
+}
+
+.generated {
+    color: #888;
+}
+
+slide.smallerCode code, slide.smallerCode div.line {
+    font-size: 0.85em !important;
 }
