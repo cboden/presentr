@@ -1,24 +1,24 @@
 <html>
 <head>
     <title>Slideshow Remote Control</title>
+
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0">
 </head>
 <body>
 
     <form id="auth">
-        <center>
-            <input id="password" type="password" placeholder="Enter password" autofocus="autofocus">
-            <br><input type="submit" value="Go">
-        </center>
+        <input id="password" type="password" placeholder="Enter password" autofocus="autofocus">
+<!--         <input type="submit" value="Go"> -->
     </form>
 
     <section id="remote">
         <form id="page">
-            <input type="number" name="slide" id="slide" value="1">
-            <input type="submit" value="Go">
+            <input type="number" name="slide" id="slide" value="" placeholder="Slide Number">
+<!--             <input type="submit" value="Go"> -->
         </form>
         
-        <button id="prev">&lt;</button>
-        <button id="next">&gt;</button>
+        <p><button id="prev">&lt;</button></p>
+        <p><button id="next">&gt;</button></p>
     </section>
 
 </body>
@@ -35,11 +35,12 @@ $(document).ready(function($) {
         e.preventDefault();
         
         var password = $('#password').val();
-        conn = new WebSocket('ws://192.168.1.101/control', [password]);
+        conn = new WebSocket('ws://' + window.location.host + '/control', [password]);
 
         conn.onopen = function() {
             $('#remote').show();
             $('#auth').hide();
+            $num.focus();
         }
 
         conn.onmessage = function(e) {
@@ -49,6 +50,7 @@ $(document).ready(function($) {
         conn.onclose = function() {
             $('#auth').show();
             $('#remote').hide();
+            $('#password').focus();
         }
     });
 
@@ -56,6 +58,7 @@ $(document).ready(function($) {
         e.preventDefault();
         
         var slideNum = $('#slide').val();
+        $num.blur();
         conn.send(slideNum);
     });
     
@@ -71,6 +74,13 @@ $(document).ready(function($) {
 });
 </script>
 <style type="text/css">
+input[type=text], input[type=password], input[type=number] {
+    font-size: 1.5em;
+}
+
+body {
+    text-align: center;
+}
 button {
     font-size: 4em;
     font-weight: bold;
