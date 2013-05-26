@@ -1,0 +1,24 @@
+.react {
+    background-color: #444B3D;
+}
+
+.space h2, .space, .dark, .dark h2, .react, .react h2 {
+    color: #FFF;
+}
+
+.right {
+    text-align: right;
+}
+
+.dark {
+    background-color: #000;
+}
+
+.space {
+    background-image:url('../img/space.gif');
+    background-repeat:repeat;
+}
+
+.smaller {
+    font-size: 1em;
+}

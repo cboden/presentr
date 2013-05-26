@@ -1,0 +1,14 @@
+{
+    "authors": [{
+        "name": "Chris Boden"
+    }],
+    "minimum-stability": "dev",
+    "require": {
+        "cboden/Ratchet": "dev-app"
+    },
+    "autoload": {
+        "psr-0": {
+            "Slide": "src"
+        }
+    }
+}

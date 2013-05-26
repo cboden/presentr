@@ -1,0 +1,80 @@
+<html>
+<head>
+    <title>Slideshow Remote Control</title>
+</head>
+<body>
+
+    <form id="auth">
+        <center>
+            <input id="password" type="password" placeholder="Enter password" autofocus="autofocus">
+            <br><input type="submit" value="Go">
+        </center>
+    </form>
+
+    <section id="remote">
+        <form id="page">
+            <input type="number" name="slide" id="slide" value="1">
+            <input type="submit" value="Go">
+        </form>
+        
+        <button id="prev">&lt;</button>
+        <button id="next">&gt;</button>
+    </section>
+
+</body>
+<script src="scripts/jquery-1.9.1.js"></script>
+<script>
+$(document).ready(function($) {
+    var $num  = $('#slide');
+    var $page = $('#page');
+
+    var conn;
+
+    $('#remote').hide();
+    $('form#auth').submit(function(e) {
+        e.preventDefault();
+        
+        var password = $('#password').val();
+        conn = new WebSocket('ws://localhost:8080/control', [password]);
+
+        conn.onopen = function() {
+            $('#remote').show();
+            $('#auth').hide();
+        }
+
+        conn.onmessage = function(e) {
+            console.log(e.data);
+        }
+
+        conn.onclose = function() {
+            $('#auth').show();
+            $('#remote').hide();
+        }
+    });
+
+    $page.submit(function(e) {
+        e.preventDefault();
+        
+        var slideNum = $('#slide').val();
+        conn.send(slideNum);
+    });
+    
+    $('#next').click(function(e) {
+        $num.val(parseInt($num.val(), 10) + 1);
+        $page.submit();
+    });
+
+    $('#prev').click(function(e) {
+        $num.val(parseInt($num.val(), 10) - 1);
+        $page.submit();
+    })
+});
+</script>
+<style type="text/css">
+button {
+    font-size: 4em;
+    font-weight: bold;
+    padding: 20px;
+}
+</style>
+</html>

@@ -27,31 +27,110 @@ function addCssRule(styleSheet, selector, rule) {
 
 angular.module('slides', [])
 
-.run(function($window, $rootScope) {
+.run(function($window, $rootScope, live, slider) {
 	angular.element($window).bind('keydown', function(e) {
-		switch (e.keyCode) {
+        if ($rootScope.remote && 1 == $rootScope.remote) {
+            return;
+        }
+
+		switch(e.keyCode) {
 			case 37:
-				if ($rootScope.currentSlide > 1) {
-					$rootScope.currentSlide--;
-					$rootScope.$apply();
-				}
+			    slider.previous();
 				break;
 			case 39:
-				if ($rootScope.currentSlide < $rootScope.slideCount) {
-					$rootScope.currentSlide++;
-					$rootScope.$apply();
-				}
+			    slider.next();
 				break;
 		}
 	});
 })
 
-.controller('SlideCtrl', function($scope, $location, $rootScope) {
+.service('slider', function($window, $rootScope) {
+    this.previous = function() {
+		if ($rootScope.currentSlide > 1) {
+			$rootScope.currentSlide--;
+			$rootScope.$apply();
+		}
+    }
+    
+    this.next = function() {
+    	if ($rootScope.currentSlide < $rootScope.slideCount) {
+    		$rootScope.currentSlide++;
+    		$rootScope.$apply();
+    	}
+    }
+})
+
+.service('live', function($q, $rootScope) {
+    var conn;
+    var subscriptions = {};
+
+    this.connect = function() {
+        if (conn && (conn._websocket && conn._websocket.readyState != 3)) {
+            return;
+        }
+
+        conn = new ab.Session('ws://localhost:8080', function() {
+            $rootScope.$broadcast('event:live-connected');
+        }, function(code) {
+            $rootScope.$broadcast('event:live-disconnect');
+        }, {
+            'skipSubprotocolCheck': true
+        });
+    }
+
+    this.subscribe = function(topic, callback) {
+        conn.subscribe(topic, callback);
+    }
+
+    this.singleSubscribe = function(topic, callback) {
+        // here
+    }
+})
+
+.controller('OnlineCtrl', function($scope, $rootScope, live, slider, $location) {
+    $scope.status = 'Connecting';
+    $scope.peers  = 0;
+
+    $rootScope.$on('event:live-connected', function() {
+        $scope.status = 'Online';
+        $scope.$apply();
+
+        live.subscribe('ctrl:remote', function(topic, msg) {
+            $scope.peers      = msg.peers;
+            $scope.status     = (1 == msg.remote ? 'Controlled' : 'Online');
+            $rootScope.remote = msg.remote;
+
+            if (msg.command) {
+                $rootScope.currentSlide = parseInt(msg.command, 10);
+            }
+
+            $rootScope.$apply();
+        });
+    });
+    $rootScope.$on('event:live-disconnect', function() {
+        $scope.status = 'Offline';
+        $scope.peers  = 0;
+        $scope.$apply();
+        
+        setTimeout(function() {
+            $scope.status = 'Connecting';
+            $scope.$apply();
+            live.connect();
+        }, 5000);
+    });
+
+    live.connect();
+})
+
+.controller('SlideCtrl', function($scope, $location, $rootScope, live) {
 	var oldHash = $location.hash();
 	var oldCurrentSlide;
 
+    $scope.peers = 0;
 	$rootScope.slideCount = 0;
 	$rootScope.currentSlide = 1;
+
+	// create websocket handling function
 
 	if ($location.hash()) {
 		$rootScope.currentSlide = oldCurrentSlide = parseInt($location.hash(), 10);
@@ -67,11 +146,19 @@ angular.module('slides', [])
 		} else if ($rootScope.currentSlide != oldCurrentSlide){
 			$location.hash(($rootScope.currentSlide > 1) ? $rootScope.currentSlide : '');
 		}
+		
+		//console.log('slide moved');
 
 		oldHash = $location.hash();
 		oldCurrentSlide = $rootScope.currentSlide;
 	}, true);
 
+})
+
+.controller('slideIntro', function($scope, live) {
+    live.singleSubscribe('intro', function() {
+        console.log('message from intro channel');
+    });
 })
 
 .directive('body', function() {
