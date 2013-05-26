@@ -1,7 +1,7 @@
 <html>
 <head>
     <title>Slideshow Remote Control</title>
-
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0">
 </head>
 <body>
@@ -19,6 +19,8 @@
         
         <p><button id="prev">&lt;</button></p>
         <p><button id="next">&gt;</button></p>
+        
+        <p><button id="reload">↻</button></p>
     </section>
 
 </body>
@@ -27,11 +29,13 @@
 $(document).ready(function($) {
     var $num  = $('#slide');
     var $page = $('#page');
+    var $auth = $('#auth');
 
     var conn;
+    var reload = false;
 
     $('#remote').hide();
-    $('form#auth').submit(function(e) {
+    $auth.submit(function(e) {
         e.preventDefault();
         
         var password = $('#password').val();
@@ -39,7 +43,7 @@ $(document).ready(function($) {
 
         conn.onopen = function() {
             $('#remote').show();
-            $('#auth').hide();
+            $auth.hide();
             $num.focus();
         }
 
@@ -48,7 +52,13 @@ $(document).ready(function($) {
         }
 
         conn.onclose = function() {
-            $('#auth').show();
+            if (reload) {
+                reload = false;
+                $auth.submit();
+                return;
+            }
+
+            $auth.show();
             $('#remote').hide();
             $('#password').focus();
         }
@@ -70,7 +80,15 @@ $(document).ready(function($) {
     $('#prev').click(function(e) {
         $num.val(parseInt($num.val(), 10) - 1);
         $page.submit();
-    })
+    });
+
+    // Somewhere along my stack something is doing some massive TCP buffering
+    // Mac OS X, VirtualBox, HaProxy...
+    // Re-connecting seems to wake push the buffer
+    $('#reload').click(function(e) {
+        reload = true;
+        conn.close();
+    });
 });
 </script>
 <style type="text/css">
