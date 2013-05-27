@@ -59,7 +59,11 @@ angular.module('slides', [])
 
     this.singleSubscribe = function(topic, callback) {
         if (lastTopic) {
-            conn.unsubscribe(lastTopic);
+            try {
+                conn.unsubscribe(lastTopic);
+            } catch (e) {
+                // nope
+            }
         }
 
         conn.subscribe(topic, callback);
@@ -103,8 +107,8 @@ angular.module('slides', [])
 })
 
 .controller('SlideCtrl', function($scope, $location, $rootScope, live) {
-    $scope.host   = 'localhost';
-    $scope.ip     = '127.0.0.1';
+    $scope.host   = $location.host();
+    $scope.ip     = $location.host();
 
 	var oldHash = $location.hash();
 	var oldCurrentSlide;
@@ -157,3 +161,8 @@ angular.module('slides', [])
 */
 
 ;
+
+
+$(document).ready(function() {
+    $('body slide').show();
+})

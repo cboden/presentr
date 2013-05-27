@@ -13,7 +13,7 @@ apt-get -y upgrade
 mkdir -p /usr/local/bin
 chown -R vagrant /usr/local/bin
 
-apt-get install -y libevent-dev libzmq-dev git pkg-config
+apt-get install -y libevent-dev libzmq-dev git pkg-config curl
 apt-get install -y php5-cli php5-dev php-pear php5-sqlite php5-xdebug
 
 /vagrant/bin/xdebug_disable

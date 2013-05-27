@@ -20,7 +20,7 @@
         <p><button id="prev">&lt;</button></p>
         <p><button id="next">&gt;</button></p>
         
-        <p><button id="reload">↻</button></p>
+<!--         <p><button id="reload">↻</button></p> -->
     </section>
 
 </body>
@@ -82,9 +82,6 @@ $(document).ready(function($) {
         $page.submit();
     });
 
-    // Somewhere along my stack something is doing some massive TCP buffering
-    // Mac OS X, VirtualBox, HaProxy...
-    // Re-connecting seems to wake push the buffer
     $('#reload').click(function(e) {
         reload = true;
         conn.close();
