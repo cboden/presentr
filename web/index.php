@@ -42,10 +42,14 @@
     </slide>
 
     <slide title="What happens?">
+
+
+
         <center><img src="img/request-response.png"></center>
     </slide>
 
     <slide title="What's in a message?">
+
         <center><img src="img/chain.png"></center>
     </slide>
 
@@ -122,9 +126,18 @@ Host: {{host}}
         <p class="smaller">The server processes incoming requests one at a time, in a queue manner.</p>
     </slide>
 
+    <slide title="Blocking has purpose">
+        <pre class="code-only highlight: [3, 4]">&lt;?php
+$db = new mysqli($host, $user, $pass, $name);
+$r = $db->query("SELECT something FROM table LIMIT 1");
+$d = $r->fetch_assoc();
+print_r($data);</pre>
+
+
+        <p>Wouldn't that suck if print_r($data); happened before MySQL returned your row?</p>
+    </slide>
+
     <slide title="The Unix Philosophy">
-
-
 
         <center>
         <blockquote>Rule of Composition: Developers should write programs that can communicate easily with other programs. This rule aims to allow developers to break down projects into small, simple programs rather than overly complex monolithic programs.</blockquote>
@@ -144,7 +157,17 @@ Host: {{host}}
     </slide>
 -->
 
-    <slide title="What is the Reactor pattern?" class="dark">
+    <slide title="What is the Reactor pattern?">
+
+
+        <center><blockquote>The Reactor design pattern handles service requests that are delivered concurrently to the application by one or more clients.
+
+        Each service in an application may consist of several methods and is represented by a separate event handler that is responsible for dispatching service-specific requests.</blockquote></center>
+    </slide>
+
+    <slide class="dark">
+
+
         <center><img src="img/telephone-operator.jpg"></center>
     </slide>
 
@@ -155,7 +178,7 @@ Host: {{host}}
 <div class="half left">
         <pre class="code-only">{
     "require": {
-        "react/react": "~0.3"
+        "react/socket": "~0.3"
     }
 }</pre>
 </div>
@@ -167,15 +190,16 @@ Host: {{host}}
     </p>
     </slide>
 
-    <slide title="Through the looking glass" class="smallerCode">
-        <pre class="code-only">&lt;?php
+    <slide title="Through the looking glass" class="smallerCode"><pre class="code-only">&lt;?php
 require __DIR__ . '/vendor/autoload.php';
 
 $loop = React\EventLoop\Factory::create();
 $socket = new React\Socket\Server($loop);
 
 $socket->on('connection', function ($conn) {
+    echo "{$conn->stream} connected\n";
     $conn->on('data', function ($data) use ($conn) {
+        echo "{$conn->stream} says '{$data}'";
         $conn->write("You said: {$data}");
     });
 });
@@ -185,17 +209,161 @@ $loop->run();</pre>
         <p class="terminal"><span class="generated">$</span> php goodbye-kansas.php</p>
     </slide>
 
+    <slide class="smallerCode"><pre class="code-only">&lt;?php
+require __DIR__.'/../vendor/autoload.php';
+
+$loop   = React\EventLoop\Factory::create();
+$socket = new React\Socket\Server($loop);
+$conns  = new \SplObjectStorage();
+
+$socket->on('connection', function($conn) use ($conns) {
+    $conns->attach($conn);
+
+    $conn->on('data', function($data) use ($conns, $conn) {
+        foreach ($conns as $current) {
+            if ($conn === $current) {
+                continue;
+            }
+
+            $current->write($conn->getRemoteAddress().': ');
+            $current->write($data);
+        }
+    });
+    $conn->on('end', function () use ($conns, $conn) {
+        $conns->detach($conn);
+    });
+});
+$socket->listen(9000);
+$loop->run();</pre></slide>
+
+    <slide title="Nuke that reactor (insert in prev script)" class="smallerCode">
+        <pre class="code-only highlight: [1,13]">$socket->listen(9001);
+$sock2_electrib_boogaloo = new React\Socket\Server($loop);
+
+$sock2_electrib_boogaloo->on('connection', function($conn) use ($conns) {
+    $conn->on('data', function($data) use ($conns, $conn) {
+        foreach ($conns as $o_conn) {
+            $from = $conn->getRemoteAddress();
+            $o_conn->write("Msg from {$from}:9001 -> {$data}");
+        }
+    });
+});
+
+$sock2_electrib_boogaloo->listen(9000);
+$loop->run();</pre>
+        <p>React lets you easily traffic data between services and connections.</p>
+    </slide>
+
+    <slide title="(a few) React libraries"><ul><li>event-loop</li>
+            <li>socket</li>
+            <li>stream</li>
+            <li>promise</li>
+            <li>dns</li>
+            <li>zmq</li>
+            <li>stomp</li></ul></slide>
+
     <slide title="pro&bull;to&bull;col">
-    
-    
+
         <center><blockquote>A standard procedure for regulating data transmission between computers.</blockquote></center>
 
 
-
-
-
-
         <p class="terminal">110111000101011101101000012</p>
+
+
+
+        <a href="https://igor.io/2012/09/24/binary-parsing.html" target="_blank">@igorwsome on binary parsing in php</a>
+    </slide>
+
+    <slide title="JSON RFC4627">
+
+
+<pre class="code-only">{
+    "what": ["this", "is", "a", "JSON", "object"],
+    "how": {"Protocol format": "is plain text"},
+    "making": {
+        "it": {
+            "easy":  ["to", "read"],
+            "for": "humans"
+        }
+    },
+    "random-number": 2
+}</pre>
+    </slide>
+
+    <slide title="DNS RFC1035" class="protocol">
+
+
+                                                1  1  1  1  1  1
+                  0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5
+                +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+                |                                               |
+                /                                               /
+                /                      NAME                     /
+                |                                               |
+                +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+                |                      TYPE                     |
+                +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+                |                     CLASS                     |
+                +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+                |                      TTL                      |
+                |                                               |
+                +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+                |                   RDLENGTH                    |
+                +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--|
+                /                     RDATA                     /
+                /                                               /
+                +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+    </slide>
+
+    <slide title="SPDY-00 draft" class="protocol">
+
+
+                    +------------------------------------+
+                    |1|    version    |         1        |
+                    +------------------------------------+
+                    |  Flags (8)  |  Length (24 bits)    |
+                    +------------------------------------+
+                    |X|           Stream-ID (31bits)     |
+                    +------------------------------------+
+                    |X| Associated-To-Stream-ID (31bits) |
+                    +------------------------------------+
+                    | Pri|Unused | Slot |                |
+                    +-------------------+                |
+                    | Number of Name/Value pairs (int32) |
+                    +------------------------------------+
+                    |     Length of name (int32)         |
+                    +------------------------------------+
+                    |           Name (string)            |
+                    +------------------------------------+
+                    |     Length of value  (int32)       |
+                    +------------------------------------+
+                    |          Value   (string)          |
+                    +------------------------------------+
+                    |           (repeats)                |
+    </slide>
+
+    <slide title="WebSocket RFC6455 protocol" class="protocol">
+
+
+
+         0                   1                   2                   3
+         0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+        +-+-+-+-+-------+-+-------------+-------------------------------+
+        |F|R|R|R| opcode|M| Payload len |    Extended payload length    |
+        |I|S|S|S|  (4)  |A|     (7)     |             (16/64)           |
+        |N|V|V|V|       |S|             |   (if payload len==126/127)   |
+        | |1|2|3|       |K|             |                               |
+        +-+-+-+-+-------+-+-------------+ - - - - - - - - - - - - - - - +
+        |     Extended payload length continued, if payload len == 127  |
+        + - - - - - - - - - - - - - - - +-------------------------------+
+        |                               |Masking-key, if MASK set to 1  |
+        +-------------------------------+-------------------------------+
+        | Masking-key (continued)       |          Payload Data         |
+        +-------------------------------- - - - - - - - - - - - - - - - +
+        :                     Payload Data continued ...                :
+        + - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - +
+        |                     Payload Data continued ...                |
+        +---------------------------------------------------------------+
     </slide>
 
     <div id="slideCounter">

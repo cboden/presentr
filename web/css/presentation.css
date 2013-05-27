@@ -26,7 +26,7 @@
     font-size: 1em;
 }
 
-.terminal, .terminal pre {
+.terminal, .terminal pre, .protocol {
     font-family: Courier New, Courier, monospace;
 }
 .terminal h2 {
@@ -39,6 +39,13 @@ p.terminal {
 
 .generated {
     color: #888;
+}
+
+.protocol {
+    font-weight: bold;
+    color: #333;
+    white-space: pre;
+    font-size: 1em;
 }
 
 slide.smallerCode code, slide.smallerCode div.line {
@@ -60,23 +67,10 @@ slide.smallerCode code, slide.smallerCode div.line {
     clear: both;
 }
 
-/*
-.bqstart {
-     float: left;
-     font-size: 700%;
-     color: #FF0000;
- }
-.bqend {
-     float: right;
-     font-size: 700%;
-     color: #FF0000;
- }
-*/
-
 blockquote {
     text-align: left;
     font-family: Georgia, serif;
-    font-size: 18px;
+    font-size: 26px;
     font-style: italic;
     width: 500px;
     margin: 0.25em 0;
