@@ -99,3 +99,7 @@ blockquote:after {
     bottom: -70px;
     color: #7a7a7a;
 }
+
+ol.smaller li {
+    font-size: 1em;
+}

@@ -33,6 +33,7 @@ $(document).ready(function($) {
 
     var conn;
     var reload = false;
+    var once   = false;
 
     $('#remote').hide();
     $auth.submit(function(e) {
@@ -70,6 +71,9 @@ $(document).ready(function($) {
         var slideNum = $('#slide').val();
         $num.blur();
         conn.send(slideNum);
+
+        // Because "FUCK YOU" iOS
+        conn.send('!' + Math.random() + Math.random() + Math.random() + Math.random());
     });
     
     $('#next').click(function(e) {

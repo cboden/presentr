@@ -34,7 +34,10 @@ class RemoteControl implements MessageComponentInterface, WsServerInterface {
     }
     
     public function onMessage(Conn $conn, $msg) {
-        echo "Remote received message: '{$msg}'\n";
+        if ('!' == $msg[0]) {
+            return;
+        }
+
         $this->_delegate->command($msg);
     }
 

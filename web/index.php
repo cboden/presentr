@@ -41,16 +41,60 @@
         <p class="right">CGI is the world that has been pulled over your eyes to blind you from the truth</p>
     </slide>
 
-    <slide title="What happens?">
+    <slide title="What happens?" class="protocol">
 
 
 
-        <center><img src="img/request-response.png"></center>
+
+
+
+
+
+
+                        Request: http://localhost/hello.php
+    +------------------+                                               +------------------+
+    |                  |----------------------------------------------&gt;|                  |
+    |                  |                                               |                  |
+    |      Client      |                                               |      Server      |
+    |                  |                                               |                  |
+    |                  |&lt;----------------------------------------------|                  |
+    +------------------+                                               +------------------+
+                                           Response: You can haz &lt;HTML&gt; 
+
+
+<!--         <center><img src="img/request-response.png"></center> -->
     </slide>
 
-    <slide title="What's in a message?">
+    <slide title="What's in a message?" class="protocol">
 
-        <center><img src="img/chain.png"></center>
+
+
+
+
+                                +------------------------------------------------------+
+                                | The entity of an HTTP message                        |
+                                |                                                      |
+                                |    +-------------------------------------------------+
+                                |    | TCP                                             |
+                                |    |                                                 |
+                                |    |    +--------------------------------------------+
+                                |    |    | HTTP                                       |
+                                |    |    |                                            |
+                                |    |    |    +---------------------------------------+
+                                |    |    |    | Format                                |
+                                |    |    |    |                                       |
+                                |    |    |    |    +----------------------------------+
+                                |    |    |    |    | Content                          |
+                                |    |    |    |    |                                  |
+                                |    |    |    |    |                                  |
+                                |    |    |    |    |                                  |
+                                |    |    |    |    |                                  |
+                                |    |    |    |    |                                  |
+                                |    |    |    |    |                                  |
+                                |    |    |    |    |                                  |
+                                |    |    |    |    |                                  |
+                                +----+----+----+----+----------------------------------+
+<!--         <center><img src="img/chain.png"></center> -->
     </slide>
 
     <slide title="Follow the white rabbit (arrows)">
@@ -84,7 +128,11 @@ Connected to {{host}}.
 Escape character is '^]'.</span>
 GET / HTTP/1.1
 Host: {{host}}
-⏎</pre>
+⏎
+
+
+
+<span class="generated">(no telnet? use nc)</span></pre>
     </slide>
 
     <slide title="PHP webserver" class="terminal smaller">
@@ -137,6 +185,9 @@ print_r($data);</pre>
         <p>Wouldn't that suck if print_r($data); happened before MySQL returned your row?</p>
     </slide>
 
+    <slide title="The event loop">
+    </slide>
+
     <slide title="The Unix Philosophy">
 
         <center>
@@ -185,7 +236,8 @@ print_r($data);</pre>
     <div class="clear"></div>
 
 
-    <p class="smaller terminal"><span class="generated">$</span> curl -sS https://getcomposer.org/installer | php
+    <p class="smaller terminal">&gt;&gt; composer.json
+        <span class="generated">$</span> curl -sS https://getcomposer.org/installer | php
         <span class="generated">$</span> composer install
     </p>
     </slide>
@@ -238,9 +290,9 @@ $loop->run();</pre></slide>
 
     <slide title="Nuke that reactor (insert in prev script)" class="smallerCode">
         <pre class="code-only highlight: [1,13]">$socket->listen(9001);
-$sock2_electrib_boogaloo = new React\Socket\Server($loop);
+$sock2_electric_boogaloo = new React\Socket\Server($loop);
 
-$sock2_electrib_boogaloo->on('connection', function($conn) use ($conns) {
+$sock2_electric_boogaloo->on('connection', function($conn) use ($conns) {
     $conn->on('data', function($data) use ($conns, $conn) {
         foreach ($conns as $o_conn) {
             $from = $conn->getRemoteAddress();
@@ -249,18 +301,18 @@ $sock2_electrib_boogaloo->on('connection', function($conn) use ($conns) {
     });
 });
 
-$sock2_electrib_boogaloo->listen(9000);
+$sock2_electric_boogaloo->listen(9000);
 $loop->run();</pre>
         <p>React lets you easily traffic data between services and connections.</p>
     </slide>
 
-    <slide title="(a few) React libraries"><ul><li>event-loop</li>
-            <li>socket</li>
-            <li>stream</li>
-            <li>promise</li>
-            <li>dns</li>
-            <li>zmq</li>
-            <li>stomp</li></ul></slide>
+    <slide title="(a few) React libraries"><ul><li><a href="https://github.com/reactphp/event-loop" target="_blank">event-loop</a></li>
+            <li><a href="https://github.com/reactphp/socket" target="_blank">socket</a></li>
+            <li><a href="https://github.com/reactphp/stream" target="_blank">stream</a></li>
+            <li><a href="https://github.com/reactphp/promise" target="_blank">promise</a></li>
+            <li><a href="https://github.com/reactphp/dns" target="_blank">dns</a></li>
+            <li><a href="https://github.com/reactphp/zmq" target="_blank">zmq</a></li>
+            <li><a href="https://github.com/reactphp/stomp" target="_blank">stomp</a></li></ul></slide>
 
     <slide title="pro&bull;to&bull;col">
 
@@ -342,7 +394,7 @@ $loop->run();</pre>
                     |           (repeats)                |
     </slide>
 
-    <slide title="WebSocket RFC6455 protocol" class="protocol">
+    <slide title="WebSocket RFC6455" class="protocol">
 
 
 
@@ -365,6 +417,278 @@ $loop->run();</pre>
         |                     Payload Data continued ...                |
         +---------------------------------------------------------------+
     </slide>
+
+    <slide title="What are WebSockets?">
+
+
+
+        <center><blockquote>WebSockets are a web technology providing full-duplex communications channels over a single TCP connection.</blockquote></center>
+    </slide>
+
+    <slide title="Example">
+    </slide>
+
+    <slide title="Ratchet">
+
+
+
+
+
+        <center><h3>(<a href="http://socketo.me" target="_blank">Ratchet</a> needs a logo)</h3></center>
+    </slide>
+
+    <slide title="Ratchet is...">
+        <ul>
+            <li>WebSockets in PHP</li>
+            <li>PSR-0 -- on <a href="http://packagist.org/packages/cboden/Ratchet" target="_blank">Packagist</a> -- on <a href="https://github.com/cboden/Ratchet" target="_blank">GitHub</a> -- unit tested</li>
+            <li>Built on top of React (asynchronous, interoperable)</li>
+            <li><a href="http://socketo.me/reports/ab" target="_blank">RFC6455 compliant</a></li>
+            <li>Made of loosely coupled components (middlewares)</li>
+        </ul>
+    </slide>
+
+    <slide title="Ratchet's decoration" class="protocol">
+
+
+                    +------------------------------------------------------+
+                    | I/O                                                  |
+                    |                                                      |
+                    |    +-------------------------------------------------+
+                    |    | HTTP                                            |
+                    |    |                                                 |
+                    |    |    +--------------------------------------------+
+                    |    |    | Router                                     |
+                    |    |    |                                            |
+                    |    |    |    +---------------------------------------+
+                    |    |    |    | WebSocket                             |
+                    |    |    |    |                                       |
+                    |    |    |    |    +----------------------------------+
+                    |    |    |    |    | *middleware* (WAMP, Logger)      |
+                    |    |    |    |    |                                  |
+                    |    |    |    |    |    +-----------------------------+
+                    |    |    |    |    |    | Your App                    |
+                    |    |    |    |    |    |                             |
+                    |    |    |    |    |    |                             |
+                    |    |    |    |    |    |                             |
+                    |    |    |    |    |    |                             |
+                    |    |    |    |    |    |                             |
+                    +----+----+----+----+----+-----------------------------+
+    </slide>
+
+    <slide title="WebSocket event API"><ul>
+            <li>onOpen</li>
+
+            <li>onMessage</li>
+
+            <li>onClose</li>
+
+            <li>onError</li>
+        </ul>
+    </slide>
+
+    <slide title="JavaScript sample" class="smallerCode"><pre class="code-only">var conn = new WebSocket('ws://hostname:port/route');
+
+conn.onopen = function(e) {
+    console.log('Connection established');
+
+    var me = prompt('What is your name?', ''); // What is your quest?
+    conn.send('Hello everyone! I am ' + me);
+}
+
+conn.onmessage = function(e) {
+    console.log(e.data);
+}
+
+conn.onclose = function(e) {
+    console.warm('Connection closed');
+    setTimeout(function() {
+        conn = new WebSocket('ws://hostname:port/route');
+    }, 5000);
+}
+
+conn.onerror = function(e) {
+    console.error('Damnit!');
+}</pre></slide>
+
+    <slide title="PHP...but first" class="smallerCode"><div class="half right"><img src="img/composer.png"></div><div class="half left"><pre class="code-only">{
+    "require": {
+        "cboden/Ratchet": "~0.2"
+    }
+}</pre></div><div class="clear"></div>...or... ♫Livin' on the Edge♫<pre class="code-only">{
+    "minimum-stability": "dev",
+    "require": {
+        "cboden/Ratchet": "dev-0.3"
+    }
+}</pre>
+    <p class="smaller terminal"><span class="generated">$</span> composer install
+    </p>
+    </slide>
+
+    <slide class="smallerCode"><pre class="code-only highlight: [5]">&lt;?php
+use Ratchet\MessageComponentInterface;
+use Ratchet\ConnectionInterface;
+
+class Chat implements MessageComponentInterface {
+    protected $conns;
+    public function __construct() {
+        $this->conns = new \SplObjectStorage;
+    }
+
+    function onOpen(ConnectionInterface $conn) {
+        $this->conns->attach($conn);
+    }
+
+    function onMessage(ConnectionInterface $conn, $msg) {
+        foreach ($this->conns as $to) // Sorry for excluding the "{"
+            if ($from != $to)         // Ran out of vertical space
+                $to->send($msg);      // Or how about "Pythonic"?
+    }
+
+    function onClose(ConnectionInterface $conn) {
+        $this->conns->detach($conn);
+    }
+
+    function onError(ConnectionInterface $conn) { }
+}</pre></slide>
+
+    <slide title="Execution">
+        <pre class="code-only">&lt;?php
+// Ratchet/0.3
+$app = new Ratchet\App('hostname', 8080, '0.0.0.0');
+$app->route('/', new Chat);
+$app->run();
+</pre>
+
+
+        App.php <a href="https://github.com/cboden/Ratchet/blob/0.3/src/Ratchet/App.php" target="_blank">source</a>
+    </slide>
+
+    <slide title="WAMP (not what you think!)"><ul><li>JSON based protocol (human readable)</li>
+            <li>The Pub/Sub and RPC patterns</li>
+            <li>Middleware included in Ratchet</li>
+            <li>Official Javascript library</li>
+        </ul>
+        <center><a href="http://wamp.ws"><img src="img/wamp_logo.png"></a></center>
+    </slide>
+
+    <slide><ol class="smaller"><li>Welcome</li>
+        <li>Prefix</li>
+        <li>Call</li>
+        <li>Call Result</li>
+        <li>Call Error</li>
+        <li>Subscribe</li>
+        <li>Unsubscribe</li>
+        <li>Publish</li>
+        <li>Event</li></ol></slide>
+
+    <slide title="Publish/Subscribe pattern" class="protocol">
+
+
+
+
+            |\
+            | \
+            |  \
+            |   +---------------------------------------------------------+
+            |   |                            |                            |
+            |   |                            |    Topic 1                 |
+            |   |                            |                            |
+            |   |                            |----------------------------|
+            |   |                            |                            |
+            |   |    WebSocket Connection    |    Topic 2                 |
+            |   |                            |                            |
+            |   |                            |----------------------------| 
+            |   |                            |                            |
+            |   |                            |    Topic 3                 |
+            |   |                            |                            |
+            |   +---------------------------------------------------------+
+            |  /
+            | /
+            |/
+    </slide>
+
+    <slide title="RPC pattern (and promises)" class="protocol">
+
+
+
+
+
+
+
+              _  _
+             /_\/_\                                             :) Fulfilled 
+     +=======\_\/_/=======+                                    +-------------
+     |        //\\\------+|                                   /
+     |       //  ||to you||   (time passing)                 /
+     |        |  |+------+|--------------------------------->
+     |        |  |        |   Do not open until Christmas    \
+     |        |  |        |                                   \
+     +====================+                                    +-------------
+                                                                :(  Rejected
+
+    </slide>
+
+    <slide class="smallerCode"><pre class="code-only">&lt;?php use Ratchet\ConnectionInterface as Conn;
+
+class BasicPubSub implements Ratchet\Wamp\WampServerInterface {
+    public function onPublish(Conn $conn, $topic, $event, array $exclude = array(), array $eligible = array()) {
+        $topic->broadcast($event);
+    }
+
+    public function onCall(Conn $conn, $id, $topic, array $params) {
+        $conn->callError($id, $topic, 'RPC not supported');
+    }
+
+    public function onOpen(Conn $conn) {
+    }
+
+    public function onClose(Conn $conn) {
+    }
+
+    public function onSubscribe(Conn $conn, $topic) {
+    }
+
+    public function onUnSubscribe(Conn $conn, $topic) {
+    }
+
+    public function onError(Conn $conn, \Exception $e) {
+    }
+}</pre></slide>
+
+    <slide title="WebSocket Browser Support">
+
+
+
+
+        <center><img src="img/ws-support.png"></center>
+    </slide>
+
+    <slide title="WebSocket gotcha's"><ul>
+            <li>Pollyfill IE: 7, 8, 9 -- Flash &bull; SockJS &bull; Socket.IO</li>
+            <li>iOS buffers like nobody's business</li>
+            <li>Beware aggressive proxies (use SSL)</li>
+            <li>Horizontally scaling is harder than sync stacks</li>
+            <li>Race conditions <del>may</del> will happen</li>
+            <li>1 process to bring them all together - 1 error to ruin them all</li>
+    </ul></slide>
+
+    <slide title="Develop with caution">
+        <center><img src="img/evented-programming.gif"></center>
+
+        <p class="smaller terminal generated">PHP Fatal error:  Call to a member function detach() on a non-object in /socketo.me/src/Ratchet/Examples/Tutorial/ChatRoom.php on line 170</p>
+    </slide>
+
+    <slide title="Questions?">
+
+
+
+
+        <ul>
+            <li><a href="https://twitter.com/boden_c" target="_blank">@boden_c</a></li>
+            <li><a href="http://reactphp.org" target="_blank">reactphp.org</a></li>
+            <li><a href="http://socketo.me" target="_blank">socketo.me</a></li>
+            <li><a href="https://github.com/cboden/presentr" target="_blank">Presentr</a></li>
+        </ul></slide>
 
     <div id="slideCounter">
                          <span ng-controller="OnlineCtrl" title="Live slideshow status">{{status}}</span> 

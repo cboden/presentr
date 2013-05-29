@@ -4,7 +4,7 @@
     }],
     "minimum-stability": "dev",
     "require": {
-        "cboden/Ratchet": "dev-app"
+        "cboden/Ratchet": "dev-0.3"
     },
     "autoload": {
         "psr-0": {
