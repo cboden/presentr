@@ -1,3 +1,11 @@
+if (typeof console == undefined) {
+    console = {
+        log: function() {}
+      , warn: function() {}
+      , error: function() {}
+    };
+}
+
 'use strict';
 
 angular.module('slides', [])
@@ -44,13 +52,23 @@ angular.module('slides', [])
             return;
         }
 
-        conn = new ab.Session('ws://' + $location.host() + addPath, function() {
-            $rootScope.$broadcast('event:live-connected');
-        }, function(code) {
-            $rootScope.$broadcast('event:live-disconnect');
-        }, {
-            'skipSubprotocolCheck': true
-        });
+        try {
+            conn = new ab.Session('ws://' + $location.host() + addPath, function() {
+                $rootScope.$broadcast('event:live-connected');
+            }, function(code) {
+                $rootScope.$broadcast('event:live-disconnect');
+            }, {
+                'skipSubprotocolCheck': true
+            });
+        } catch (e) {
+            // probably accessing from filesystem
+            console.warn('Invalid WebSocket path');
+
+            conn = {
+                subscribe: function(topic, callback) {}
+              , unsubscribe: function(topic) {}
+            };
+        }
     }
 
     this.subscribe = function(topic, callback) {
