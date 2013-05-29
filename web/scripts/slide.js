@@ -45,7 +45,18 @@ angular.module('slides', [])
 
 .service('live', function($rootScope, $location) {
     var conn;
-    var lastTopic;
+    var currentTopic;
+
+    var remoteSubscriptions = {};
+    var appSubscriptions    = {};
+
+    var callbackProxy = function(topic, data) {
+        remoteSubscriptions[topic](topic, data);
+
+        if (appSubscriptions[topic] && ('slide' + $rootScope.currentSlide) == topic) {
+            appSubscriptions[topic](topic, data);
+        }
+    };
 
     this.connect = function() {
         if (conn && (conn._websocket && conn._websocket.readyState != 3)) {
@@ -72,33 +83,47 @@ angular.module('slides', [])
     }
 
     this.subscribe = function(topic, callback) {
-        conn.subscribe(topic, callback);
+        remoteSubscriptions[topic] = callback;
+        conn.subscribe(topic, callbackProxy);
     }
 
-    this.singleSubscribe = function(topic, callback) {
-        if (lastTopic) {
+    this.stateSubscribe = function(topic, callback) {
+        if (currentTopic) {
             try {
-                conn.unsubscribe(lastTopic);
+                conn.unsubscribe(currentTopic);
+                delete remoteSubscriptions[topic];
             } catch (e) {
                 // nope
             }
         }
 
-        conn.subscribe(topic, callback);
-        lastTopic = topic;
+        this.subscribe(topic, callback);
+        currentTopic = topic;
     }
+
+    this.publish = function(data) {
+        conn.publish(currentTopic, data);
+    }
+
+    this.softSubscribe = function(topic, callback) {
+        appSubscriptions[topic] = callback;
+    }
+})
+
+.service('slideInteractions', function() {
+    this.listen
 })
 
 .controller('OnlineCtrl', function($scope, $rootScope, live, slider, $location) {
     $scope.status = 'Connecting';
-    $scope.peers  = 0;
+    $scope.connected  = 0;
 
     $rootScope.$on('event:live-connected', function() {
         $scope.status = 'Online';
         $scope.$apply();
 
         live.subscribe('ctrl:remote', function(topic, msg) {
-            $scope.peers      = msg.peers;
+            $scope.connected  = msg.peers;
             $scope.status     = (1 == msg.remote ? 'Controlled' : 'Online');
             $rootScope.remote = msg.remote;
 
@@ -111,7 +136,7 @@ angular.module('slides', [])
     });
     $rootScope.$on('event:live-disconnect', function() {
         $scope.status = 'Offline';
-        $scope.peers  = 0;
+        $scope.connected  = 0;
         $scope.$apply();
         
         setTimeout(function() {
@@ -132,8 +157,10 @@ angular.module('slides', [])
 	var oldCurrentSlide;
 
     var onSlideMessage = function(topic, msg) {
-        $scope.peers = msg.peers;
-        $scope.$apply();
+        if (undefined != msg.peers) { // fix
+            $scope.peers = msg.peers;
+            $scope.$apply();
+        }
     }
 
     $scope.peers = 0;
@@ -141,7 +168,7 @@ angular.module('slides', [])
 	$rootScope.currentSlide = 1;
 
     $rootScope.$on('event:live-connected', function() {
-        live.singleSubscribe('slide' + $rootScope.currentSlide, onSlideMessage);
+        live.stateSubscribe('slide' + $rootScope.currentSlide, onSlideMessage);
     });
 
 	if ($location.hash()) {
@@ -162,12 +189,49 @@ angular.module('slides', [])
         // I wanted to use topic strings on slide to identify their topic subscriptions
         // but have been unsuccessful in binding a data attribute to scope
         // So I'm using the number to do so...which will cause problems if the slides get re-ordered...
-		live.singleSubscribe('slide' + $rootScope.currentSlide, onSlideMessage);
+		live.stateSubscribe('slide' + $rootScope.currentSlide, onSlideMessage);
 
 		oldHash = $location.hash();
 		oldCurrentSlide = $rootScope.currentSlide;
 	}, true);
+})
 
+.controller('slideDraw', function($scope, live) {
+    this.serverDraw = function(topic, data) {
+        if (!Array.isArray(data)) {
+            return;
+        }
+
+        $scope.compDraw.push(data[0]);
+        $scope.compCount++;
+        $scope.$apply();
+    }
+
+    // If things break look at this hard coded number!!!
+    live.softSubscribe('slide32', this.serverDraw);
+/*
+    setTimeout(function() {
+        $scope.compDraw.push([200, 400, 22, 44]);
+        $scope.compDraw.push([50, 50, 500, 500]);
+        $scope.compCount += 2;
+        $scope.$apply();
+    }, 2000);
+
+    setTimeout(function() {
+        $scope.compDraw.push([40, 20, 200, 20]);
+        $scope.compCount++;
+        $scope.$apply();
+    }, 4000);
+*/
+
+    $scope.$watch('userCount', function() {
+        if (0 == $scope.userDraw.length) {
+            return;
+        }
+
+        live.publish($scope.userDraw);
+        $scope.userDraw = [];
+    });
 })
 
 /*

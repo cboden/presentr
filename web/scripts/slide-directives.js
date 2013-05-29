@@ -327,4 +327,71 @@ angular.module('slides')
 	};
 })
 
+.directive("drawing", function() {
+    return {
+        restrict: "A",
+        link: function(scope, element, attr, controller) {
+            scope.userDraw  = [];
+            scope.compDraw  = [];
+            scope.userCount = 0;
+            scope.compCount = 0;
+
+            var ctx = element[0].getContext('2d');      
+            var drawing = false;     
+            var lastX;
+            var lastY;
+
+            element.bind('mousedown', function(event) {
+                lastX = event.offsetX;
+                lastY = event.offsetY;        
+
+                ctx.beginPath();        
+                drawing = true;
+            });
+
+            element.bind('mousemove', function(event) {
+                if(drawing){
+                    currentX = event.offsetX;
+                    currentY = event.offsetY;
+
+                    draw(lastX, lastY, currentX, currentY);
+                    scope.userDraw.push([lastX, lastY, currentX, currentY]);
+                    scope.userCount++;
+
+                    lastX = currentX;
+                    lastY = currentY;
+
+                    scope.$apply();
+                }        
+            });
+
+            element.bind('mouseup', function(event){
+                drawing = false;
+            });        
+
+            function reset(){
+                element[0].width = element[0].width; 
+            }         
+
+            function draw(lX, lY, cX, cY) {
+                ctx.moveTo(lX,lY);
+                ctx.lineTo(cX,cY);
+                ctx.strokeStyle = "#4bf";
+                ctx.stroke();
+            }
+
+            scope.$watch('compCount', function(after, before) {
+                for (var i = 0, len = scope.compDraw.length; i < len; i++) {
+                    var coords = scope.compDraw[i];
+
+                    ctx.beginPath();
+                    draw(coords[0], coords[1], coords[2], coords[3]);
+                }
+
+                scope.compDraw = [];
+            });
+        }
+    };
+})
+
 ;

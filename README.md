@@ -1,13 +1,16 @@
 # Prezentr (alpha)
 
-An lively HTML5 slideshow build with AngularJS and Ratchet.
+The new, lively, hip(ster) HTML5 slideshow build with AngularJS and Ratchet.
 
 ### TODOs
 
 * Separate React presentation from application
-* Fix supervisord and nginx configuration in vagrant bootstrap
 * Big code cleanup
-* Use NgViews instead of separate files
-* index.php -> index.html (doesn't really need server) [requires nginx config for server mode]
 * Fix slide offset in FireFox
 * Test on IE (lol)
+* notes directive, notes included in slide, only show when appropriate url
+* pub/sub is completely fucked up because controllers are always loaded
+
+### Angular Slideshow initially from
+ * https://github.com/IgorMinar/ng-slides
+ * https://github.com/werk85/ng-slides

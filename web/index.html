@@ -51,15 +51,15 @@
 
 
 
-                        Request: http://localhost/hello.php
-    +------------------+                                               +------------------+
-    |                  |----------------------------------------------&gt;|                  |
-    |                  |                                               |                  |
-    |      Client      |                                               |      Server      |
-    |                  |                                               |                  |
-    |                  |&lt;----------------------------------------------|                  |
-    +------------------+                                               +------------------+
-                                           Response: You can haz &lt;HTML&gt; 
+                    Request: http://localhost/hello.php
++------------------+                                               +------------------+
+|                  |----------------------------------------------&gt;|                  |
+|                  |                                               |                  |
+|      Client      |                                               |      Server      |
+|                  |                                               |                  |
+|                  |&lt;----------------------------------------------|                  |
++------------------+                                               +------------------+
+                                       Response: You can haz &lt;HTML&gt; 
 
 
 <!--         <center><img src="img/request-response.png"></center> -->
@@ -71,34 +71,43 @@
 
 
 
-                                +------------------------------------------------------+
-                                | The entity of an HTTP message                        |
-                                |                                                      |
-                                |    +-------------------------------------------------+
-                                |    | TCP                                             |
-                                |    |                                                 |
-                                |    |    +--------------------------------------------+
-                                |    |    | HTTP                                       |
-                                |    |    |                                            |
-                                |    |    |    +---------------------------------------+
-                                |    |    |    | Format                                |
-                                |    |    |    |                                       |
-                                |    |    |    |    +----------------------------------+
-                                |    |    |    |    | Content                          |
-                                |    |    |    |    |                                  |
-                                |    |    |    |    |                                  |
-                                |    |    |    |    |                                  |
-                                |    |    |    |    |                                  |
-                                |    |    |    |    |                                  |
-                                |    |    |    |    |                                  |
-                                |    |    |    |    |                                  |
-                                |    |    |    |    |                                  |
-                                +----+----+----+----+----------------------------------+
+                        +------------------------------------------------------+
+                        | The entity of an HTTP message                        |
+                        |                                                      |
+                        |    +-------------------------------------------------+
+                        |    | TCP                                             |
+                        |    |                                                 |
+                        |    |    +--------------------------------------------+
+                        |    |    | HTTP                                       |
+                        |    |    |                                            |
+                        |    |    |    +---------------------------------------+
+                        |    |    |    | Format                                |
+                        |    |    |    |                                       |
+                        |    |    |    |    +----------------------------------+
+                        |    |    |    |    | Content                          |
+                        |    |    |    |    |                                  |
+                        |    |    |    |    |                                  |
+                        |    |    |    |    |                                  |
+                        |    |    |    |    |                                  |
+                        |    |    |    |    |                                  |
+                        |    |    |    |    |                                  |
+                        |    |    |    |    |                                  |
+                        |    |    |    |    |                                  |
+                        +----+----+----+----+----------------------------------+
 <!--         <center><img src="img/chain.png"></center> -->
     </slide>
 
     <slide title="Follow the white rabbit (arrows)">
         <center><img src="img/cgi.png"></center>
+    </slide>
+
+    <slide title="How does a socket work?"><ul>
+            <li>Client connects to server</li>
+            <li>Server accepts connection</li>
+            <li>Client/Server send messages to eachother</li>
+        </ul>
+
+        <img class="right" src="img/phone.png">
     </slide>
 
     <slide title="Opening your eyes" class="terminal smaller">
@@ -223,6 +232,15 @@ print_r($data);</pre>
 
 
         <center><img src="img/telephone-operator.jpg"></center>
+    </slide>
+
+    <slide title="React is:">
+        <ul>
+            <li>Asynchronous (non-blocking)</li>
+            <li>Event Driven</li>
+            <li>PSR-0 -- on <a href="http://packagist.org/packages/react/react" target="_blank">Packagist</a> -- on <a href="https://github.com/reactphp/react" target="_blank">GitHub</a> -- <a href="https://travis-ci.org/reactphp/react" target="_blank">unit tested</a></li>
+            <li>Fun</li>
+        </ul>
     </slide>
 
 <!--     <slide><img src="img/get-on-with-it.jpg" class="center"></slide> -->
@@ -437,8 +455,7 @@ $loop->run();</pre>
         <center><blockquote>WebSockets are a web technology providing full-duplex communications channels over a single TCP connection.</blockquote></center>
     </slide>
 
-    <slide title="Example">
-    </slide>
+    <slide title="Example: draw something"><div ng-controller="slideDraw"><canvas id="imageView" width="800" height="585" drawing></canvas></div></slide>
 
     <slide title="Ratchet">
 
@@ -452,7 +469,7 @@ $loop->run();</pre>
     <slide title="Ratchet is...">
         <ul>
             <li>WebSockets in PHP</li>
-            <li>PSR-0 -- on <a href="http://packagist.org/packages/cboden/Ratchet" target="_blank">Packagist</a> -- on <a href="https://github.com/cboden/Ratchet" target="_blank">GitHub</a> -- unit tested</li>
+            <li>PSR-0 -- on <a href="http://packagist.org/packages/cboden/Ratchet" target="_blank">Packagist</a> -- on <a href="https://github.com/cboden/Ratchet" target="_blank">GitHub</a> -- <a href="https://travis-ci.org/cboden/Ratchet" target="_blank">unit tested</a></li>
             <li>Built on top of React (asynchronous, interoperable)</li>
             <li><a href="http://socketo.me/reports/ab" target="_blank">RFC6455 compliant</a></li>
             <li>Made of loosely coupled components (middlewares)</li>
@@ -583,7 +600,7 @@ $app->run();
         <center><a href="http://wamp.ws"><img src="img/wamp_logo.png"></a></center>
     </slide>
 
-    <slide><ol class="smaller"><li>Welcome</li>
+    <slide><ol start="0" class="smaller"><li>Welcome</li>
         <li>Prefix</li>
         <li>Call</li>
         <li>Call Result</li>
@@ -667,6 +684,35 @@ class BasicPubSub implements Ratchet\Wamp\WampServerInterface {
     }
 }</pre></slide>
 
+    <slide title="AutobahnJS" class="smallerCode">
+    <pre class="code-only">
+var conn = new ab.Session(
+    'ws://' + window.location.host, 
+    function(sessId, v, srvId) {
+        console.log('Sess established to ' + srvId);
+
+        conn.subscribe('wamp-demo', function(topic, data) {
+            console.log('msg from ' + topic + ':');
+            console.log(data);
+        });
+    }, function(code) {
+        console.warm('WAMP session closed with code: ' + code);
+    }, {
+        'skipSubprotocolCheck': true
+    }
+); // Stop copy/paste here
+
+conn.publish('wamp-demo', 'Hello demo peeps!');
+
+conn.close();
+</pre>
+    </slide>
+
+    <slide title="Hello, Async? Yes, this is sync." class="smallerCode">
+        <pre class="code-only"></pre>
+        <pre class="code-only"></pre>
+    </slide>
+
     <slide title="WebSocket Browser Support">
 
 
@@ -702,11 +748,19 @@ class BasicPubSub implements Ratchet\Wamp\WampServerInterface {
             <li><a href="https://github.com/cboden/presentr" target="_blank">Presentr</a></li>
         </ul></slide>
 
+    <div id="slideCounter" ng-controller="OnlineCtrl">
+                         <span title="Live slideshow status">{{status}}</span> 
+        &nbsp; -- &nbsp; <span title="Slide number/total">{{currentSlide}} / {{slideCount}}</span> 
+        &nbsp; -- &nbsp; <span title="Peers on this slide/overall">{{peers}}/<span>{{connected}}</span></span>
+    </div>
+
+<!--
     <div id="slideCounter">
                          <span ng-controller="OnlineCtrl" title="Live slideshow status">{{status}}</span> 
         &nbsp; -- &nbsp; <span title="Slide number/total">{{currentSlide}} / {{slideCount}}</span> 
         &nbsp; -- &nbsp; <span title="Peers on this slide/overall">{{peers}}/<span ng-controller="OnlineCtrl">{{peers}}</span></span>
     </div>
+-->
 </body>
     <script>var addPath = '';</script>
 
