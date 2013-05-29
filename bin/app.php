@@ -6,17 +6,17 @@ use React\Socket\Server as Reactor;
 
     $loop = Factory::create();
 
-    $show  = new Slide\Slideshow;
-    $notes = new Slide\SpeakerNotes;
+    $show  = new Presentr\Slideshow;
+    $notes = new Presentr\SpeakerNotes;
 
-    $delegates = (new Slide\ControllableComposite);
+    $delegates = (new Presentr\ControllableComposite);
     $delegates->add($show)->add($notes);
 
     $app = new Ratchet\App('localhost', 8080, '127.0.0.1', $loop);
     $app->route('/', $show);
     $app->route('/notes', $notes);
-    $app->route('/control', new Slide\RemoteControl($delegates));
-    $app->route('/chat', new Slide\Chat);
+    $app->route('/control', new Presentr\RemoteControl($delegates));
+    $app->route('/chat', new Presentr\Chat);
 
     $echo = new Reactor($loop);
     $echo->listen(1337, '0.0.0.0');

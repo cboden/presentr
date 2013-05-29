@@ -529,7 +529,7 @@ conn.onerror = function(e) {
 }</pre></div><div class="clear"></div>...or... ♫Livin' on the Edge♫<pre class="code-only">{
     "minimum-stability": "dev",
     "require": {
-        "cboden/Ratchet": "dev-0.3"
+        "cboden/Ratchet": "0.3.*@dev"
     }
 }</pre>
     <p class="smaller terminal"><span class="generated">$</span> composer install

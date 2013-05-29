@@ -1,5 +1,5 @@
 <?php
-namespace Slide;
+namespace Presentr;
 use Ratchet\MessageComponentInterface;
 use Ratchet\ConnectionInterface;
  

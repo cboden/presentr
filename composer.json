@@ -4,11 +4,11 @@
     }],
     "minimum-stability": "dev",
     "require": {
-        "cboden/Ratchet": "dev-0.3"
+        "cboden/Ratchet": "0.3.*@dev"
     },
     "autoload": {
         "psr-0": {
-            "Slide": "src"
+            "Presentr": "src"
         }
     }
 }

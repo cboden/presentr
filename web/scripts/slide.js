@@ -165,4 +165,4 @@ angular.module('slides', [])
 
 $(document).ready(function() {
     $('body slide').show();
-})
+});

@@ -1,5 +1,5 @@
 <?php
-namespace Slide;
+namespace Presentr;
 
 class ControllableComposite implements Controllable {
     protected $_controllables;

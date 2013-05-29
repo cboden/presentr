@@ -3,20 +3,20 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "60de8c1b416fad3a5016c2a67e7506b9",
+    "hash": "c3b697b73ede67b9b3c11fdcd645a2b5",
     "packages": [
         {
             "name": "cboden/ratchet",
-            "version": "dev-app",
+            "version": "0.3.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cboden/Ratchet.git",
-                "reference": "8b3591ce0d03c3ab325d73c353e055f6711d9f15"
+                "reference": "7a83a5476db1f106e336aac6388adf71a6afc995"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cboden/Ratchet/zipball/8b3591ce0d03c3ab325d73c353e055f6711d9f15",
-                "reference": "8b3591ce0d03c3ab325d73c353e055f6711d9f15",
+                "url": "https://api.github.com/repos/cboden/Ratchet/zipball/7a83a5476db1f106e336aac6388adf71a6afc995",
+                "reference": "7a83a5476db1f106e336aac6388adf71a6afc995",
                 "shasum": ""
             },
             "require": {
@@ -53,7 +53,7 @@
                 "server",
                 "sockets"
             ],
-            "time": "2013-05-09 00:44:01"
+            "time": "2013-05-28 01:43:01"
         },
         {
             "name": "evenement/evenement",
@@ -539,12 +539,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Routing.git",
-                "reference": "214dcf7be79a073bb21fe4acf57e8af1bb401d81"
+                "reference": "93fa88b2494d3262c87ca0762551a658cc390669"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Routing/zipball/214dcf7be79a073bb21fe4acf57e8af1bb401d81",
-                "reference": "214dcf7be79a073bb21fe4acf57e8af1bb401d81",
+                "url": "https://api.github.com/repos/symfony/Routing/zipball/93fa88b2494d3262c87ca0762551a658cc390669",
+                "reference": "93fa88b2494d3262c87ca0762551a658cc390669",
                 "shasum": ""
             },
             "require": {
@@ -588,7 +588,7 @@
             ],
             "description": "Symfony Routing Component",
             "homepage": "http://symfony.com",
-            "time": "2013-05-16 07:54:39"
+            "time": "2013-05-27 14:49:42"
         }
     ],
     "packages-dev": [

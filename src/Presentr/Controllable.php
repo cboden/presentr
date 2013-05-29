@@ -1,5 +1,5 @@
 <?php
-namespace Slide;
+namespace Presentr;
 
 interface Controllable {
     public function command($directive);

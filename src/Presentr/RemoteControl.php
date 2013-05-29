@@ -1,5 +1,5 @@
 <?php
-namespace Slide;
+namespace Presentr;
 use Ratchet\ConnectionInterface as Conn;
 use Ratchet\WebSocket\WsServerInterface;
 use Ratchet\MessageComponentInterface;
