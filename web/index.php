@@ -177,7 +177,7 @@ Host: {{host}}
     <slide title="Blocking has purpose">
         <pre class="code-only highlight: [3, 4]">&lt;?php
 $db = new mysqli($host, $user, $pass, $name);
-$r = $db->query("SELECT something FROM table LIMIT 1");
+$r = $db->query("SELECT aRow FROM table LIMIT 1");
 $d = $r->fetch_assoc();
 print_r($data);</pre>
 
@@ -186,6 +186,9 @@ print_r($data);</pre>
     </slide>
 
     <slide title="The event loop">
+        <pre class="code-only">while (true) {
+    // do things
+}</pre><center><img src="/img/event-loop.png"></center>
     </slide>
 
     <slide title="The Unix Philosophy">
@@ -222,14 +225,14 @@ print_r($data);</pre>
         <center><img src="img/telephone-operator.jpg"></center>
     </slide>
 
-    <slide><img src="img/get-on-with-it.jpg" class="center"></slide>
+<!--     <slide><img src="img/get-on-with-it.jpg" class="center"></slide> -->
 
     <slide title="getcomposer.org" class="smallerCode">
         <div class="half right"><img src="img/composer.png"></div>
 <div class="half left">
         <pre class="code-only">{
     "require": {
-        "react/socket": "~0.3"
+        "react/socket": "0.3.*"
     }
 }</pre>
 </div>
@@ -289,7 +292,7 @@ $socket->listen(9000);
 $loop->run();</pre></slide>
 
     <slide title="Nuke that reactor (insert in prev script)" class="smallerCode">
-        <pre class="code-only highlight: [1,13]">$socket->listen(9001);
+        <pre class="code-only highlight: [1,13]">$socket->listen(9000);
 $sock2_electric_boogaloo = new React\Socket\Server($loop);
 
 $sock2_electric_boogaloo->on('connection', function($conn) use ($conns) {
@@ -301,7 +304,7 @@ $sock2_electric_boogaloo->on('connection', function($conn) use ($conns) {
     });
 });
 
-$sock2_electric_boogaloo->listen(9000);
+$sock2_electric_boogaloo->listen(9001);
 $loop->run();</pre>
         <p>React lets you easily traffic data between services and connections.</p>
     </slide>
@@ -314,14 +317,23 @@ $loop->run();</pre>
             <li><a href="https://github.com/reactphp/zmq" target="_blank">zmq</a></li>
             <li><a href="https://github.com/reactphp/stomp" target="_blank">stomp</a></li></ul></slide>
 
+    <slide title="React\LoopInterface">
+        <ul>
+            <li>StreamSelectLoop -- works on all systems</li>
+            <li>LibEventLoop -- currently best option</li>
+            <li>LibEvLoop -- alpha</li>
+            <li>LibUvLoop -- testing in PR</li>
+            <li>EventLoop -- testing in PR</li>
+        </ul>
+    </slide>    
+
     <slide title="pro&bull;to&bull;col">
-
         <center><blockquote>A standard procedure for regulating data transmission between computers.</blockquote></center>
-
 
         <p class="terminal">110111000101011101101000012</p>
 
 
+        <center><blockquote>English, motherfucker, do you speak it?</blockquote></center>
 
         <a href="https://igor.io/2012/09/24/binary-parsing.html" target="_blank">@igorwsome on binary parsing in php</a>
     </slide>
@@ -486,7 +498,7 @@ $loop->run();</pre>
         </ul>
     </slide>
 
-    <slide title="JavaScript sample" class="smallerCode"><pre class="code-only">var conn = new WebSocket('ws://hostname:port/route');
+    <slide title="JavaScript sample" class="smallerCode"><pre class="code-only">var conn = new WebSocket('ws://{{host}}/chat');
 
 conn.onopen = function(e) {
     console.log('Connection established');
@@ -496,13 +508,13 @@ conn.onopen = function(e) {
 }
 
 conn.onmessage = function(e) {
-    console.log(e.data);
+    console.log('ws-msg: ' + e.data);
 }
 
 conn.onclose = function(e) {
-    console.warm('Connection closed');
+    console.warn('Connection closed');
     setTimeout(function() {
-        conn = new WebSocket('ws://hostname:port/route');
+        conn = new WebSocket('ws://{{host}}/chat');
     }, 5000);
 }
 
@@ -512,7 +524,7 @@ conn.onerror = function(e) {
 
     <slide title="PHP...but first" class="smallerCode"><div class="half right"><img src="img/composer.png"></div><div class="half left"><pre class="code-only">{
     "require": {
-        "cboden/Ratchet": "~0.2"
+        "cboden/Ratchet": "0.2.*"
     }
 }</pre></div><div class="clear"></div>...or... ♫Livin' on the Edge♫<pre class="code-only">{
     "minimum-stability": "dev",
@@ -540,7 +552,7 @@ class Chat implements MessageComponentInterface {
 
     function onMessage(ConnectionInterface $conn, $msg) {
         foreach ($this->conns as $to) // Sorry for excluding the "{"
-            if ($from != $to)         // Ran out of vertical space
+            if ($conn != $to)         // Ran out of vertical space
                 $to->send($msg);      // Or how about "Pythonic"?
     }
 
@@ -548,14 +560,14 @@ class Chat implements MessageComponentInterface {
         $this->conns->detach($conn);
     }
 
-    function onError(ConnectionInterface $conn) { }
+    function onError(ConnectionInterface $conn, \Exception $e) { }
 }</pre></slide>
 
     <slide title="Execution">
         <pre class="code-only">&lt;?php
 // Ratchet/0.3
 $app = new Ratchet\App('hostname', 8080, '0.0.0.0');
-$app->route('/', new Chat);
+$app->route('/chat', new Chat);
 $app->run();
 </pre>
 

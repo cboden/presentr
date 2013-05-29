@@ -7,16 +7,254 @@
 
 <body ng-controller="SlideCtrl">
 
+<!--
+    Still need to comment on:
+        * statful/stateless
+-->
+
     <slide><ul>
         <li>You are Chris. Author of Ratchet, co-author of React</li>
         <li>Open source enthusiast, passion for real-time applications</li>
         <li>Thanks. Beta testing Ratchet 0.3. Reminded me why React/Ratchet - programming should be fun</li>
-        <li>A tcp packet walks in to a bar and says "I want a beer", barman says "you want a beer?" and tcp packet says "yes, a beer"</li>
         <li>I'd tell you a UDP joke, but you might not get it</li>
     </ul></slide>
     
     <slide><ul>
+        <li>url maps to filesystem</li>
+        <li>php is executed and rendered in browser as html/css/javascript</li>
+        <li>evolution to mod_rewrite to direct all traffic to single script which routes itself</li>
+    </ul></slide>
+
+    <slide><ul>
+    </ul></slide>
+
+    <slide><ul>
+        <li>client opens a socket connection</li>
+        <li>requests a page</li>
+        <li>server response with another HTTP message, usually html, closes connection</li>
+        <li>stateless</li>
+    </ul></slide>
+
+    <slide><ul>
+        <li>Transmission Control Protocol - ensures delivery in the order it was sent</li>
+        <li>layers, wrapped.  this is sent both ways through the connection</li>
+        <li>A tcp packet walks in to a bar and says "I want a beer", barman says "you want a beer?" and tcp packet says "yes, a beer"</li>
+    </ul></slide>
+
+    <slide><ul>
+        <li>error in diagram - no cloud in localhost</li>
+        <li>running processes communicating with each other</li>
+        <li>your request will eventually get routed to its destination</li>
+        <li>who's configured a server before?</li>
+        <li>goto: 9 or 14</li>
+    </ul></slide>
+
+    <slide><ul>
+        <li>strip away a layer</li>
+        <li>curl removes the html rendering, css styling, and javascript execution</li>
+    </ul></slide>
+
+    <slide><ul>
+        <li>strip away another</li>
+        <li>one server can host multiple domains. must Host: header specifies which domain you're asking for</li>
+        <li>goto: 6 -- remove nginx/fpm</li>
+    </ul></slide>
+
+    <slide><ul>
+        <li>below the tcp layer is the IP layer</li>
+        <li>only one process can be bound to a port</li>
+    </ul></slide>
+
+    <slide><ul>
+        <li>5.4, testing only, blocking</li>
+    </ul></slide>
+
+    <slide><ul>
+        <li>one at a time</li>
+        <li>if multiple clients make a request the server must finish executing one before it can handle the next</li>
+        <li>single lane traffic on the highway with a slow truck leading the way</li>
+    </ul></slide>
+
+    <slide><ul>
+        <li>mysql is another process you communicate with over sockets</li>
+        <li>server side script talks to it and waits</li>
+        <li>a blocking process can talk to a non-blocking</li>
+        <li>the async can deal with things while the sync waits</li>
+    </ul></slide>
+
+    <slide><ul>
+        <li>loops waiting for an event to happen, when an event happens it executes code and waits for the next event</li>
+    </ul></slide>
+
+    <slide><ul>
+        <li>the smaller each unit is the less prone it is to error</li>
+        <li>it's easier to test small applications</li>
+        <li>goto: 6</li>
+    </ul></slide>
+
+    <slide><ul>
+        <li>assembly line</li>
+        <li>each process doing one small thing makes an entire system faster</li>
+        <li>each process is only waiting on its one task</li>
+    </ul></slide>
+
+    <slide><ul>
+    </ul></slide>
+
+    <slide><ul>
+        <li>routes connections to services</li>
+    </ul></slide>
+
+    <slide><ul>
+        <li>React - is a PHP library with its core being a reactor pattern</li>
+        <li>Installed with packagist/composer</li>
+        <li>PSR-2, unit tested, blah, blah, blah</li>
+        
+    </ul></slide>
+
+    <slide><ul>
+        <li>intro - uses javascript like event syntax</li>
+        <li>when a connection is established to the server from the client a new Connection object is created</li>
+        <li>When that connection receives new data from the client we'll send it back</li>
+        <li>telnet demo</li>
+    </ul></slide>
+
+    <slide><ul>
+        <li>in a traditional http request/response each connection is silo'd into a private php runtime</li>
+        <li>in React a single script houses all connections into a single run time</li>
+        <li>each connection houses its own context, there are no global variables</li>
+        <li>how to communicate between connections, demo</li>
+    </ul></slide>
+
+    <slide><ul>
+        <li>true reactor, multiple services, re-directing traffic</li>
+        <li>sudo hierarchical architecture</li>
+        <li>demo</li>
+    </ul></slide>
+
+    <slide><ul>
+        <li>socket - open sockets, binds to ports, communicates over tcp</li>
+        <li>stream - wrapper with helpers, underlying socket, will be used for EIO</li>
+        <li>promise - answer to nested callbacks (more later)</li>
+        <li>dns - async dns lookup</li>
+        <li>zmq - wizardry, tcp on steroids</li>
+        <li>stomp - text based protocol (more later)</li>
+    </ul></slide>
+
+    <slide><ul>
+        <li>streams are slow</li>
+        <li>libevent handles thousands</li>
+    </ul></slide>
+
+    <slide><ul>
+        <li>that's how you talk to processes, but what good is it?</li>
+        <li>how systems agree to communicate with eachother</li>
+        <li>unstructured, raw data</li>
+    </ul></slide>
+
+    <slide><ul>
+    </ul></slide>
+
+    <slide><ul>
+        <li>Igor wrote async DNS for PHP</li>
+    </ul></slide>
+
+    <slide><ul>
+    </ul></slide>
+
+    <slide><ul>
+        <li>don't worry!</li>
+    </ul></slide>
+
+    <slide><ul>
+        <li>What we just saw but over web browsers</li>
+    </ul></slide>
+
+    <slide><ul>
+        <li>...</li>
+    </ul></slide>
+
+    <slide><ul>
         <li></li>
+    </ul></slide>
+
+    <slide><ul>
+        <li>RFC is the binary protocol end points agree to communicate with</li>
+        <li>Ratchet also supports Hixie76 for some ppl on Safari</li>
+    </ul></slide>
+
+    <slide><ul>
+        <li>decorator pattern, layers, unix philosophy</li>
+        <li>allows it to be future proof</li>
+        <li>I/O is binding to React's javascript api</li>
+    </ul></slide>
+
+    <slide><ul>
+        <li>events are triggered on both server and client side</li>
+    </ul></slide>
+
+    <slide><ul>
+        <li>copy/paste</li>
+    </ul></slide>
+
+    <slide><ul>
+        <li></li>
+    </ul></slide>
+
+    <slide><ul>
+        <li>chat in ratchet, hello world, same as react</li>
+    </ul></slide>
+
+    <slide><ul>
+        <li>binding class to reactor</li>
+        <li>demo app code, show decorator, routing</li>
+        <li>0.3 only</li>
+        <li>still just raw, unstructured, data</li>
+    </ul></slide>
+
+    <slide><ul>
+        <li>python guy hasn't heard of windows</li>
+    </ul></slide>
+
+    <slide><ul>
+        <li>protocol messages</li>
+    </ul></slide>
+
+    <slide><ul>
+        <li>connection is a highway</li>
+        <li>topic are lanes in the highway</li>
+    </ul></slide>
+
+    <slide><ul>
+        <li>rpc is promise</li>
+        <li>instead of callbacks you're giving a promise object</li>
+        <li>at some point it will be fulfilled or broken</li>
+        <li>The server can choose to respond to it at any time</li>
+    </ul></slide>
+
+    <slide><ul>
+        <li>WAMP boilerplate in Ratchet</li>
+        <li>Show topic code</li>
+    </ul></slide>
+
+    <slide><ul>
+        <li>c</li>
+    </ul></slide>
+
+    <slide><ul>
+        <li>Flash universally supported, including Ratchet</li>
+        <li>May be blocked by some proxies, 3 second wait</li>
+        <li>SockJS tries WS, falls back to other HTTP methods</li>
+        <li>Socket.IO opens long polling, opens second WebSocket conn, wasteful</li>
+    </ul></slide>
+
+    <slide><ul>
+        <li>hello? yes, you are dog</li>
+        <li>Ratchet 0.1 on socketo.me -- React disconnect + GC faster than Ratchet ->detach()</li>
+    </ul></slide>
+
+    <slide><ul>
+        <li>c</li>
     </ul></slide>
 
     <div id="slideCounter">

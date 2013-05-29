@@ -1,6 +1,10 @@
 /sbin/ifconfig eth1 192.168.1.101 netmask 255.255.255.0 up
 /sbin/route add default gw 192.168.1.1 eth1
 
+service nginx start
+service haproxy start
+service supervisor start
+
 which wstest
 if [[ $? == 0 ]]; then
     echo "Found wstest, skipping provisioning"
@@ -49,6 +53,8 @@ echo "deb-src http://nginx.org/packages/ubuntu/ quantal nginx" >> /etc/apt/sourc
 apt-get update
 apt-get install -y nginx php5-fpm
 mv /etc/nginx/conf.d/default.conf /etc/nginx/conf.d/default
+rm /etc/nginx/nginx.conf
+ln -s /vagrant/templates/nginx.conf /etc/nginx/nginx.conf
 ln -s /vagrant/templates/nginx-localhost.conf /etc/nginx/conf.d/presentr-localhost.conf
 service nginx restart
 
@@ -65,3 +71,7 @@ cp /vagrant/templates/haproxy-init-default /etc/default/haproxy
 service haproxy start
 
 echo 'export PATH=$PATH:/vagrant/bin' >> ~vagrant/.bashrc
+
+update-rc.d nginx disable
+update-rc.d haproxy disable
+update-rc.d supervisor disable
