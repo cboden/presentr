@@ -1,0 +1,105 @@
+.react {
+    background-color: #444B3D;
+}
+
+.terminal, .terminal h2,
+.space, .space h2,
+.dark, .dark h2,
+.react, .react h2 {
+    color: #FFF;
+}
+
+.right {
+    text-align: right;
+}
+
+.terminal, .dark {
+    background-color: #000;
+}
+
+.space {
+    background-image:url('../img/space.gif');
+    background-repeat:repeat;
+}
+
+.smaller p, p.smaller, .smaller pre {
+    font-size: 1em;
+}
+
+.terminal, .terminal pre, .protocol {
+    font-family: Courier New, Courier, monospace;
+}
+.terminal h2 {
+    font-family: auto;
+}
+
+p.terminal {
+    padding: 0.5em;
+}
+
+.generated {
+    color: #888;
+}
+
+.protocol {
+    font-weight: bold;
+    color: #333;
+    white-space: pre;
+    font-size: 1em;
+}
+
+slide.smallerCode code, slide.smallerCode div.line {
+    font-size: 0.85em !important;
+}
+
+.half {
+    width: 420px;
+    overflow: visible;
+}
+
+.right {
+    float: right;
+}
+.left {
+    float: left;
+}
+.clear {
+    clear: both;
+}
+
+blockquote {
+    text-align: left;
+    font-family: Georgia, serif;
+    font-size: 26px;
+    font-style: italic;
+    width: 500px;
+    margin: 0.25em 0;
+    padding: 0.25em 40px;
+    line-height: 1.45;
+    position: relative;
+    color: #383838;
+}
+
+blockquote:before {
+    display: block;
+    content: "\201C";
+    font-size: 80px;
+    position: absolute;
+    left: -20px;
+    top: -20px;
+    color: #7a7a7a;
+}
+
+blockquote:after {
+    content: "\201D";
+    display: block;
+    font-size: 80px;
+    position: absolute;
+    right: 10px;
+    bottom: -70px;
+    color: #7a7a7a;
+}
+
+ol.smaller li {
+    font-size: 1em;
+}
