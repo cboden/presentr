@@ -10,6 +10,14 @@ if (typeof console == undefined) {
 
 angular.module('slides', [])
 
+.config(function($routeProvider) {
+    $routeProvider
+    .when('/', {
+        controller: 'SlideCtrl'
+      , templateUrl: 'react.html'
+    })
+})
+
 .run(function($window, $rootScope, live, slider) {
 	angular.element($window).bind('keydown', function(e) {
         if ($rootScope.remote && 1 == $rootScope.remote) {

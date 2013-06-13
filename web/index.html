@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en" xmlns:ng="http://angularjs.org/" ng-app="slides">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>React</title>
+
+    <style type="text/css">
+        body slide { display: none; }
+    </style>
+</head>
+
+<body ng-view>
+
+    <div id="slideCounter" ng-controller="OnlineCtrl">
+                         <span title="Live slideshow status">{{status}}</span> 
+        &nbsp; -- &nbsp; <span title="Slide number/total">{{currentSlide}} / {{slideCount}}</span> 
+        &nbsp; -- &nbsp; <span title="Peers on this slide/overall">{{peers}}/<span>{{connected}}</span></span>
+    </div>
+
+<!--
+    <div id="slideCounter">
+                         <span ng-controller="OnlineCtrl" title="Live slideshow status">{{status}}</span> 
+        &nbsp; -- &nbsp; <span title="Slide number/total">{{currentSlide}} / {{slideCount}}</span> 
+        &nbsp; -- &nbsp; <span title="Peers on this slide/overall">{{peers}}/<span ng-controller="OnlineCtrl">{{peers}}</span></span>
+    </div>
+-->
+</body>
+    <script>var addPath = '';</script>
+
+    <script src="scripts/jquery-1.9.1.js"></script>
+    <script src="scripts/autobahnjs/autobahn.js"></script>
+    <script src="scripts/when/when.js"></script>
+    <script src="scripts/angular.js" ng:autobind></script>
+    <script src="syntaxhighlighter/shCore.js"></script>
+    <script src="syntaxhighlighter/shBrushJScript.js"></script>
+    <script src="syntaxhighlighter/shBrushXml.js"></script>
+
+    <link rel="stylesheet" href="style.css" type="text/css">
+    <link rel="stylesheet" href="css/shCore.css" type="text/css">
+    <link rel="stylesheet" href="css/shThemeDefault.css" type="text/css">
+    <link rel="stylesheet" href="css/presentation.css" type="text/css">
+
+    <script src="scripts/slide.js"></script>
+    <script src="scripts/slide-directives.js"></script>
+</html>
