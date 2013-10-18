@@ -1,3 +1,6 @@
+(function(angular, undefined) {
+'use strict';
+
 if (typeof console == undefined) {
     console = {
         log: function() {}
@@ -6,7 +9,6 @@ if (typeof console == undefined) {
     };
 }
 
-'use strict';
 
 angular.module('slides', [])
 
@@ -242,9 +244,4 @@ angular.module('slides', [])
 })
 */
 
-;
-
-
-$(document).ready(function() {
-    $('body slide').show();
-});
+;})(angular);

@@ -1,3 +1,6 @@
+(function(angular, undefined) {
+'use strict';
+    
 function addCssRules(stylesheet, rules) {
 	angular.forEach(rules, function(rule, selector) {
 		var ruleString = '';
@@ -394,4 +397,4 @@ angular.module('slides')
     };
 })
 
-;
+;})(angular);

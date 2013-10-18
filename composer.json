@@ -2,9 +2,8 @@
     "authors": [{
         "name": "Chris Boden"
     }],
-    "minimum-stability": "dev",
     "require": {
-        "cboden/Ratchet": "0.3.*@dev"
+        "cboden/Ratchet": "0.3.*"
     },
     "autoload": {
         "psr-0": {
