@@ -112,9 +112,11 @@ angular.module('slides', [])
     }
 })
 
+/*
 .service('slideInteractions', function() {
     this.listen
 })
+*/
 
 .controller('OnlineCtrl', function($scope, $rootScope, live, slider, $location) {
     $scope.status = 'Connecting';

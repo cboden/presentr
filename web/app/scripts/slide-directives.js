@@ -29,9 +29,9 @@ function addCssRule(styleSheet, selector, rule) {
 
 angular.module('slides')
 
-.directive('body', function() {
+.directive('slideshow', function() {
 	return {
-		restrict: 'E',
+		restrict: 'A',
 		link: function(scope, element, iAttrs, controller) {
 			var styleSheet = document.styleSheets[0];
 
@@ -218,8 +218,15 @@ angular.module('slides')
 // I think this is because the SlideCtrl is scoped for all slides, not the 
 // current slide. 
 
+.factory('SlideInfo', function() {
+    return {
+        currentSlide: 0
+      , slideCount: 0
+    }
+})
 
-.directive('slide', function($rootScope) {
+
+.directive('slide', function($rootScope, SlideInfo) {
 	return {
 		restrict: 'E',
 		scope: {
@@ -230,6 +237,7 @@ angular.module('slides')
 		template: '<h2 class="title">{{title}}</h2><div ng-transclude></div>',
 		link: function(scope, element, attrs, controller) {
 			var slideId = ++$rootScope.slideCount;
+//            var slideId = ++SlideInfo.slideCount;
 			var slideState;
 
 			element.attr('slide-id', slideId);
@@ -354,8 +362,8 @@ angular.module('slides')
 
             element.bind('mousemove', function(event) {
                 if(drawing){
-                    currentX = event.offsetX;
-                    currentY = event.offsetY;
+                    var currentX = event.offsetX;
+                    var currentY = event.offsetY;
 
                     draw(lastX, lastY, currentX, currentY);
                     scope.userDraw.push([lastX, lastY, currentX, currentY]);

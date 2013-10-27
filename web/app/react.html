@@ -5,7 +5,7 @@
     <title>React</title>
 </head>
 
-<body ng-controller="SlideCtrl" ng-cloak>
+<body ng-controller="SlideCtrl" slideshow ng-cloak>
 
     <slide title="Reacting: Evented programming in PHP" class="react" topic="intro">
         <div class="center">
@@ -180,7 +180,7 @@ Host: {{host}}
     </slide>
 
     <slide title="Blocking has purpose">
-        <pre class="code-only highlight: [3, 4]">&lt;?php
+        <pre class="code-only highlight: [3, 4]; brush: php">&lt;?php
 $db = new mysqli($host, $user, $pass, $name);
 $r = $db->query("SELECT aRow FROM table LIMIT 1");
 $d = $r->fetch_assoc();
@@ -259,7 +259,7 @@ print_r($data);</pre>
     </p>
     </slide>
 
-    <slide title="Through the looking glass" class="smallerCode"><pre class="code-only">&lt;?php
+    <slide title="Through the looking glass" class="smallerCode"><pre class="code-only brush: php">&lt;?php
 require __DIR__ . '/vendor/autoload.php';
 
 $loop = React\EventLoop\Factory::create();
@@ -278,7 +278,7 @@ $loop->run();</pre>
         <p class="terminal"><span class="generated">$</span> php goodbye-kansas.php</p>
     </slide>
 
-    <slide class="smallerCode"><pre class="code-only">&lt;?php
+    <slide class="smallerCode"><pre class="code-only brush: php">&lt;?php
 require __DIR__.'/../vendor/autoload.php';
 
 $loop   = React\EventLoop\Factory::create();
@@ -306,7 +306,7 @@ $socket->listen(9000);
 $loop->run();</pre></slide>
 
     <slide title="Nuke that reactor (insert in prev script)" class="smallerCode">
-        <pre class="code-only highlight: [1,13]">$socket->listen(9000);
+        <pre class="code-only highlight: [1,13]; brush: php">$socket->listen(9000);
 $sock2_electric_boogaloo = new React\Socket\Server($loop);
 
 $sock2_electric_boogaloo->on('connection', function($conn) use ($conns) {
@@ -511,7 +511,7 @@ $loop->run();</pre>
         </ul>
     </slide>
 
-    <slide title="JavaScript sample" class="smallerCode"><pre class="code-only">var conn = new WebSocket('ws://{{host}}/chat');
+    <slide title="JavaScript sample" class="smallerCode"><pre class="code-only brush:JavaScript">var conn = new WebSocket('ws://{{host}}/chat');
 
 conn.onopen = function(e) {
     console.log('Connection established');
@@ -549,7 +549,7 @@ conn.onerror = function(e) {
     </p>
     </slide>
 
-    <slide class="smallerCode"><pre class="code-only highlight: [5]">&lt;?php
+    <slide class="smallerCode"><pre class="code-only highlight: [5]; brush: php">&lt;?php
 use Ratchet\MessageComponentInterface;
 use Ratchet\ConnectionInterface;
 
@@ -577,7 +577,7 @@ class Chat implements MessageComponentInterface {
 }</pre></slide>
 
     <slide title="Execution">
-        <pre class="code-only">&lt;?php
+        <pre class="code-only brush: php">&lt;?php
 // Ratchet/0.3
 $app = new Ratchet\App('hostname', 8080, '0.0.0.0');
 $app->route('/chat', new Chat);
@@ -653,7 +653,7 @@ $app->run();
 
     </slide>
 
-    <slide class="smallerCode"><pre class="code-only">&lt;?php use Ratchet\ConnectionInterface as Conn;
+    <slide class="smallerCode"><pre class="code-only brush: php;">&lt;?php use Ratchet\ConnectionInterface as Conn;
 
 class BasicPubSub implements Ratchet\Wamp\WampServerInterface {
     public function onPublish(Conn $conn, $topic, $event, array $exclude = array(), array $eligible = array()) {
@@ -681,7 +681,7 @@ class BasicPubSub implements Ratchet\Wamp\WampServerInterface {
 }</pre></slide>
 
     <slide title="AutobahnJS" class="smallerCode">
-    <pre class="code-only">
+    <pre class="code-only brush: jscript">
 var conn = new ab.Session(
     'ws://' + window.location.host, 
     function(sessId, v, srvId) {
@@ -758,20 +758,30 @@ conn.close();
     </div>
 -->
 </body>
-    <script>var addPath = '';</script>
+    <script>
+        var addPath = '';
+        window.define = function(factory) {
+            try{ delete window.define; } catch(e){ window.define = void 0; } // IE
+            window.when = factory();
+        };
+        window.define.amd = {};
+    </script>
 
-    <script src="scripts/jquery-1.9.1.js"></script>
-    <script src="scripts/autobahnjs/autobahn.js"></script>
-    <script src="scripts/when/when.js"></script>
-    <script src="scripts/angular.js" ng:autobind></script>
-    <script src="syntaxhighlighter/shCore.js"></script>
-    <script src="syntaxhighlighter/shBrushJScript.js"></script>
-    <script src="syntaxhighlighter/shBrushXml.js"></script>
-
-    <link rel="stylesheet" href="style.css" type="text/css">
-    <link rel="stylesheet" href="css/shCore.css" type="text/css">
-    <link rel="stylesheet" href="css/shThemeDefault.css" type="text/css">
-    <link rel="stylesheet" href="css/presentation.css" type="text/css">
+<!--     <script src="scripts/jquery-1.9.1.js"></script> -->
+    <script src="bower_components/when/when.js"></script>
+    <script src="bower_components/autobahnjs/autobahn/autobahn.js"></script>
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+    <script src="bower_components/SyntaxHighlighter/scripts/XRegExp.js"></script>
+    <script src="bower_components/SyntaxHighlighter/scripts/shCore.js"></script>
+    <script src="bower_components/SyntaxHighlighter/scripts/shBrushJScript.js"></script>
+    <script src="bower_components/SyntaxHighlighter/scripts/shBrushXml.js"></script>
+    <script src="bower_components/SyntaxHighlighter/scripts/shBrushPhp.js"></script>
+    
+    <link rel="stylesheet" href="styles/fonts.css" type="text/css">
+    <link rel="stylesheet" href="bower_components/SyntaxHighlighter/styles/shCore.css" type="text/css">
+    <link rel="stylesheet" href="bower_components/SyntaxHighlighter/styles/shThemeDefault.css" type="text/css">
+    <link rel="stylesheet" href="styles/presentation.css" type="text/css">
 
     <script src="scripts/slide.js"></script>
     <script src="scripts/slide-directives.js"></script>

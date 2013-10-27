@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en" ng-app="slides">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>Angular Slide Intro</title>
+  <script src="angular.js"></script>
+  <script src="slide.js"></script>
+</head>
+<body ng-controller="SlideCtrl">
+
+  <slide>
+    <h1>AngularJS</h1>
+
+    <h2>
+      HTML &amp JavaScript
+          for web-apps
+      rather than <em>documents</em>
+    </h2>
+  </slide>
+
+
+  <slide>
+    what's wrong
+    with HTML?
+  </slide>
+
+
+  <slide>
+    <h1>slide 1</h1>
+    content
+       <b>for</b>
+             slide
+              1
+  </slide>
+
+
+  <slide>
+    <h1>slide 2</h1>
+    content for slide 2
+  </slide>
+
+
+  <slide>
+    <h1>slide 3</h1>
+    content for slide 3
+  </slide>
+
+  
+  <slide>
+    <h1>slide 4</h1>
+      content
+        <b>for</b>
+            slide
+              4
+  </slide>
+
+
+  <slide>
+    <h1>slide 5</h1>
+    content for slide 5
+  </slide>
+
+  <div id="slideCounter">{{currentSlide}} / {{slideCount}}</div>
+</body>
+</html>

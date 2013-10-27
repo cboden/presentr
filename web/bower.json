@@ -1,0 +1,19 @@
+{
+  "name": "Presentr",
+  "version": "0.0.1",
+  "dependencies": {
+    "angular": "1.2.0-rc.3",
+    "json3": "~3.2.4","es5-shim": "~2.0.8",
+    "angular-resource": "~1.0.7",
+    "angular-cookies": "~1.0.7",
+    "angular-sanitize": "~1.0.7",
+    "angular-ui-router": "~0.2",
+    "SyntaxHighlighter": "git://github.com/alexgorbatchev/SyntaxHighlighter.git#~3.0",
+    "autobahnjs": "~0.7.9",
+    "when": "~2.5"
+  },
+  "devDependencies": {
+    "angular-mocks": "1.2.0-rc.3",
+    "angular-scenario": "1.2.0-rc.3"
+  }
+}

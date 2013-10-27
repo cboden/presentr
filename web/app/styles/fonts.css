@@ -1,0 +1,15 @@
+@font-face {
+	font-family:'PTSansNarrowRegular';
+	src:url('/font/ptn57f.ttf') format('truetype'),
+		url('/font/ptn57f-webfont.svg#PTSansNarrowRegular') format('svg');
+	font-weight:normal;
+	font-style:normal;
+}
+
+@font-face {
+	font-family:'PTSansNarrowBold';
+	src:url('/font/ptn77f.ttf') format('truetype'),
+		url('/font/ptn77f-webfont.svg#PTSansNarrowBold') format('svg');
+	font-weight:normal;
+	font-style:normal;
+}
