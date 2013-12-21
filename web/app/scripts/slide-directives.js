@@ -1,5 +1,7 @@
 (function(angular, undefined) {
 'use strict';
+
+var $stolenStateProvider;
     
 function addCssRules(stylesheet, rules) {
 	angular.forEach(rules, function(rule, selector) {
@@ -26,8 +28,11 @@ function addCssRule(styleSheet, selector, rule) {
 	}
 }
 
-
 angular.module('slides')
+
+.config(function($stateProvider) {
+    $stolenStateProvider = $stateProvider;
+})
 
 .directive('slideshow', function() {
 	return {
@@ -226,28 +231,39 @@ angular.module('slides')
 })
 
 
-.directive('slide', function($rootScope, SlideInfo) {
+.directive('slide', function($rootScope, SlideInfo, $state) {
 	return {
 		restrict: 'E',
 		scope: {
 			title: '@'
+          , state: '@'
 		},
 		transclude: true,
 		replace: false,
-		template: '<h2 class="title">{{title}}</h2><div ng-transclude></div>',
+		template: '<h2 class="title" ng-bind="title"></h2><div ng-transclude></div>',
 		link: function(scope, element, attrs, controller) {
-			var slideId = ++$rootScope.slideCount;
-//            var slideId = ++SlideInfo.slideCount;
-			var slideState;
+			var slideId = ++SlideInfo.slideCount
+			  , stateId = attrs.state || slideId.toString()
+			  , slideState;
 
+            $stolenStateProvider.state(stateId, {
+                url: '/'
+              , controller: function() {
+                  console.log('wtf')
+              }
+            });
+			
+$rootScope.slideCount++;
+			
 			element.attr('slide-id', slideId);
 			if (!scope.title) {
 				element.addClass('no-title');
 			}
 
 			$rootScope.$watch('currentSlide', function() {
-				if (slideState)
+				if (slideState) {
 					element.removeClass(slideState);
+				}
 
 				switch ($rootScope.currentSlide) {
 					case (slideId + 1):
@@ -262,6 +278,7 @@ angular.module('slides')
 					default:
 						slideState = ($rootScope.currentSlide > slideId) ? 'past' : 'future';
 				}
+
 				element.addClass(slideState);
 			}, true);
 		}

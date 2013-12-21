@@ -10,7 +10,7 @@ if (typeof console == undefined) {
 }
 
 
-angular.module('slides', [])
+angular.module('slides', ['ui.router'])
 
 .run(function($window, $rootScope, live, slider) {
 	angular.element($window).bind('keydown', function(e) {
@@ -236,6 +236,10 @@ angular.module('slides', [])
         live.publish($scope.userDraw);
         $scope.userDraw = [];
     });
+})
+
+.controller('intro', function($scope) {
+    console.log('intro controller');
 })
 
 /*

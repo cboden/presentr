@@ -1,56 +1,788 @@
 <!doctype html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title></title>
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width">
-    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
-
-        <!-- build:css(.tmp) styles/main.css -->
-        <link rel="stylesheet" href="styles/main.css">
-        <!-- endbuild -->
+<html lang="en" xmlns:ng="http://angularjs.org/" ng-app="slides">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>React</title>
 </head>
-  <body ng-app="newwebApp">
-    <!--[if lt IE 7]>
-      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-    <![endif]-->
 
-    <!--[if lt IE 9]>
-      <script src="bower_components/es5-shim/es5-shim.js"></script>
-      <script src="bower_components/json3/lib/json3.min.js"></script>
-    <![endif]-->
+<body ng-controller="SlideCtrl" slideshow ng-cloak>
 
-    <!-- Add your site or application content here -->
-    <div class="container" ng-view=""></div>
+    <slide title="Reacting: Evented programming in PHP" class="react" state="intro">
+        <div class="center">
 
-    <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
-     <script>
-       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-       m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-       })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-       ga('create', 'UA-XXXXX-X');
-       ga('send', 'pageview');
+
+            <img src="img/logo.png" />
+
+        
+
+
+
+
+
+        <p class="right">by: Chris Boden</p>
+        </div>
+    </slide>
+    
+
+    <slide title="Hello World!"><center><img src="img/hello.png"></center>
+        <p class="right smaller">But what if I told you...</p>
+    </slide>
+
+    <slide title="You are a slave" class="dark smaller">
+
+        <center><img src="img/pills.png"></center>
+
+
+        <p class="right">CGI is the world that has been pulled over your eyes to blind you from the truth</p>
+    </slide>
+
+    <slide title="What happens?" class="protocol">
+
+
+
+
+
+
+
+
+
+                    Request: http://localhost/hello.php
++------------------+                                               +------------------+
+|                  |----------------------------------------------&gt;|                  |
+|                  |                                               |                  |
+|      Client      |                                               |      Server      |
+|                  |                                               |                  |
+|                  |&lt;----------------------------------------------|                  |
++------------------+                                               +------------------+
+                                       Response: You can haz &lt;HTML&gt; 
+
+
+<!--         <center><img src="img/request-response.png"></center> -->
+    </slide>
+
+    <slide title="What's in a message?" class="protocol">
+
+
+
+
+
+                        +------------------------------------------------------+
+                        | The entity of an HTTP message                        |
+                        |                                                      |
+                        |    +-------------------------------------------------+
+                        |    | TCP                                             |
+                        |    |                                                 |
+                        |    |    +--------------------------------------------+
+                        |    |    | HTTP                                       |
+                        |    |    |                                            |
+                        |    |    |    +---------------------------------------+
+                        |    |    |    | Format                                |
+                        |    |    |    |                                       |
+                        |    |    |    |    +----------------------------------+
+                        |    |    |    |    | Content                          |
+                        |    |    |    |    |                                  |
+                        |    |    |    |    |                                  |
+                        |    |    |    |    |                                  |
+                        |    |    |    |    |                                  |
+                        |    |    |    |    |                                  |
+                        |    |    |    |    |                                  |
+                        |    |    |    |    |                                  |
+                        |    |    |    |    |                                  |
+                        +----+----+----+----+----------------------------------+
+<!--         <center><img src="img/chain.png"></center> -->
+    </slide>
+
+    <slide title="Follow the white rabbit (arrows)">
+        <center><img src="img/cgi.png"></center>
+    </slide>
+
+    <slide title="How does a socket work?"><ul>
+            <li>Client connects to server</li>
+            <li>Server accepts connection</li>
+            <li>Client/Server send messages to eachother</li>
+        </ul>
+
+        <img class="right" src="img/phone.png">
+    </slide>
+
+    <slide title="Opening your eyes" class="terminal smaller">
+        <p><span class="generated">$</span> curl -v http://{{host}}/hello.php</p>
+        <pre class="smaller generated">* About to connect() to {{host}} port 80 (#0)
+*   Trying {{host}}...
+* connected
+* Connected to {{host}} ({{host}}) port 80 (#0)
+&gt; GET /hello.php HTTP/1.1
+&gt; User-Agent: curl/7.24.0 OpenSSL/0.9.8r zlib/1.2.5
+&gt; Host: {{host}}
+&gt; Accept: */*
+&gt; 
+&lt; HTTP/1.1 200 OK
+&lt; Content-Type: text/html
+&lt; 
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;&lt;body&gt;
+&lt;div&gt;etc, etc
+</pre>
+    </slide>
+
+    <slide title="Deeper into the rabbit hole" class="terminal">
+        <pre><span class="generated">$</span> telnet {{host}} 80
+<span class="generated">Trying {{ip}}...
+Connected to {{host}}.
+Escape character is '^]'.</span>
+GET / HTTP/1.1
+Host: {{host}}
+⏎
+
+
+
+<span class="generated">(no telnet? use nc)</span></pre>
+    </slide>
+
+    <slide title="PHP webserver" class="terminal smaller">
+        <span class="generated">$</span> php -S 0.0.0.0:8000 alice.php
+
+
+        <span class="generated">(in another term - server takes control of env)</span>
+        <span class="generated">$</span> curl http://localhost:8000
+
+        <pre class="generated">*   Trying 127.0.0.1...
+* Connected to localhost (127.0.0.1) port 8000 (#0)
+> GET / HTTP/1.1
+> User-Agent: curl/7.27.0
+> Host: localhost:8000
+> 
+&lt; HTTP/1.1 200 OK
+&lt; Host: localhost:8000
+&lt; Connection: close
+&lt; Content-type: text/html
+&lt; 
+5.4.6-1ubuntu1.2
+</pre>
+    </slide>
+
+    <slide title="Stop!">
+        <div class="center">
+            <img src="img/php-hammer.jpg">
+
+
+            <h3>Hammer time!</h3>
+        </div>
+    </slide>
+
+    <slide title="Synchronous/blocking processing">
+        <div class="center">
+            <img src="img/dmv.gif">
+        </div>
+
+        <p class="smaller">The server processes incoming requests one at a time, in a queue manner.</p>
+    </slide>
+
+    <slide title="Blocking has purpose">
+        <pre class="code-only highlight: [3, 4]; brush: php">&lt;?php
+$db = new mysqli($host, $user, $pass, $name);
+$r = $db->query("SELECT aRow FROM table LIMIT 1");
+$d = $r->fetch_assoc();
+print_r($data);</pre>
+
+
+        <p>Wouldn't that suck if print_r($data); happened before MySQL returned your row?</p>
+    </slide>
+
+    <slide title="The event loop">
+        <pre class="code-only">while (true) {
+    // do things
+}</pre><center><img src="img/event-loop.png"></center>
+    </slide>
+
+    <slide title="The Unix Philosophy">
+
+        <center>
+        <blockquote>Rule of Composition: Developers should write programs that can communicate easily with other programs. This rule aims to allow developers to break down projects into small, simple programs rather than overly complex monolithic programs.</blockquote>
+        </center>
+    </slide>
+
+    <slide title="In practice">
+        <div class="center">
+            <img src="img/assembly-line.jpg">
+        </div>
+    </slide>
+
+<!--
+    <slide title="Free your mind" class="terminal smaller">
+        <span class="generated">$</span> mkfifo proxypipe
+        <span class="generated">$</span> while true; do cat proxypipe | nc -l 0.0.0.0 8080 | tee -a in-proxy.txt | nc localhost 8000 | tee -a out-proxy.txt 1>proxypipe; done
+    </slide>
+-->
+
+    <slide title="What is the Reactor pattern?">
+
+
+        <center><blockquote>The Reactor design pattern handles service requests that are delivered concurrently to the application by one or more clients.
+
+        Each service in an application may consist of several methods and is represented by a separate event handler that is responsible for dispatching service-specific requests.</blockquote></center>
+    </slide>
+
+    <slide class="dark">
+
+
+        <center><img src="img/telephone-operator.jpg"></center>
+    </slide>
+
+    <slide title="React is:">
+        <ul>
+            <li>Asynchronous (non-blocking)</li>
+            <li>Event Driven</li>
+            <li>PSR-0 -- on <a href="http://packagist.org/packages/react/react" target="_blank">Packagist</a> -- on <a href="https://github.com/reactphp/react" target="_blank">GitHub</a> -- <a href="https://travis-ci.org/reactphp/react" target="_blank">unit tested</a></li>
+            <li>Fun</li>
+        </ul>
+    </slide>
+
+<!--     <slide><img src="img/get-on-with-it.jpg" class="center"></slide> -->
+
+    <slide title="getcomposer.org" class="smallerCode">
+        <div class="half right"><img src="img/composer.png"></div>
+<div class="half left">
+        <pre class="code-only">{
+    "require": {
+        "react/socket": "0.3.*"
+    }
+}</pre>
+</div>
+    <div class="clear"></div>
+
+
+    <p class="smaller terminal">&gt;&gt; composer.json
+        <span class="generated">$</span> curl -sS https://getcomposer.org/installer | php
+        <span class="generated">$</span> composer install
+    </p>
+    </slide>
+
+    <slide title="Through the looking glass" class="smallerCode"><pre class="code-only brush: php">&lt;?php
+require __DIR__ . '/vendor/autoload.php';
+
+$loop = React\EventLoop\Factory::create();
+$socket = new React\Socket\Server($loop);
+
+$socket->on('connection', function ($conn) {
+    echo "{$conn->stream} connected\n";
+    $conn->on('data', function ($data) use ($conn) {
+        echo "{$conn->stream} says '{$data}'";
+        $conn->write("You said: {$data}");
+    });
+});
+
+$socket->listen(1337, '0.0.0.0');
+$loop->run();</pre>
+        <p class="terminal"><span class="generated">$</span> php goodbye-kansas.php</p>
+    </slide>
+
+    <slide class="smallerCode"><pre class="code-only brush: php">&lt;?php
+require __DIR__.'/../vendor/autoload.php';
+
+$loop   = React\EventLoop\Factory::create();
+$socket = new React\Socket\Server($loop);
+$conns  = new \SplObjectStorage();
+
+$socket->on('connection', function($conn) use ($conns) {
+    $conns->attach($conn);
+
+    $conn->on('data', function($data) use ($conns, $conn) {
+        foreach ($conns as $current) {
+            if ($conn === $current) {
+                continue;
+            }
+
+            $current->write($conn->getRemoteAddress().': ');
+            $current->write($data);
+        }
+    });
+    $conn->on('end', function () use ($conns, $conn) {
+        $conns->detach($conn);
+    });
+});
+$socket->listen(9000);
+$loop->run();</pre></slide>
+
+    <slide title="Nuke that reactor (insert in prev script)" class="smallerCode">
+        <pre class="code-only highlight: [1,13]; brush: php">$socket->listen(9000);
+$sock2_electric_boogaloo = new React\Socket\Server($loop);
+
+$sock2_electric_boogaloo->on('connection', function($conn) use ($conns) {
+    $conn->on('data', function($data) use ($conns, $conn) {
+        foreach ($conns as $o_conn) {
+            $from = $conn->getRemoteAddress();
+            $o_conn->write("Msg from {$from}:9001 -> {$data}");
+        }
+    });
+});
+
+$sock2_electric_boogaloo->listen(9001);
+$loop->run();</pre>
+        <p>React lets you easily traffic data between services and connections.</p>
+    </slide>
+
+    <slide title="(a few) React libraries"><ul><li><a href="https://github.com/reactphp/event-loop" target="_blank">event-loop</a></li>
+            <li><a href="https://github.com/reactphp/socket" target="_blank">socket</a></li>
+            <li><a href="https://github.com/reactphp/stream" target="_blank">stream</a></li>
+            <li><a href="https://github.com/reactphp/promise" target="_blank">promise</a></li>
+            <li><a href="https://github.com/reactphp/dns" target="_blank">dns</a></li>
+            <li><a href="https://github.com/reactphp/zmq" target="_blank">zmq</a></li>
+            <li><a href="https://github.com/reactphp/stomp" target="_blank">stomp</a></li></ul></slide>
+
+    <slide title="React\LoopInterface">
+        <ul>
+            <li>StreamSelectLoop -- works on all systems</li>
+            <li>LibEventLoop -- currently best option</li>
+            <li>LibEvLoop -- alpha</li>
+            <li>LibUvLoop -- testing in PR</li>
+            <li>EventLoop -- testing in PR</li>
+        </ul>
+    </slide>    
+
+    <slide title="pro&bull;to&bull;col">
+        <center><blockquote>A standard procedure for regulating data transmission between computers.</blockquote></center>
+
+        <p class="terminal">110111000101011101101000012</p>
+
+
+        <center><blockquote>English, motherfucker, do you speak it?</blockquote></center>
+
+        <a href="https://igor.io/2012/09/24/binary-parsing.html" target="_blank">@igorwsome on binary parsing in php</a>
+    </slide>
+
+    <slide title="JSON RFC4627">
+
+
+<pre class="code-only">{
+    "what": ["this", "is", "a", "JSON", "object"],
+    "how": {"Protocol format": "is plain text"},
+    "making": {
+        "it": {
+            "easy":  ["to", "read"],
+            "for": "humans"
+        }
+    },
+    "random-number": 2
+}</pre>
+    </slide>
+
+    <slide title="DNS RFC1035" class="protocol">
+
+
+                                                1  1  1  1  1  1
+                  0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5
+                +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+                |                                               |
+                /                                               /
+                /                      NAME                     /
+                |                                               |
+                +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+                |                      TYPE                     |
+                +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+                |                     CLASS                     |
+                +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+                |                      TTL                      |
+                |                                               |
+                +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+                |                   RDLENGTH                    |
+                +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--|
+                /                     RDATA                     /
+                /                                               /
+                +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+    </slide>
+
+    <slide title="SPDY-00 draft" class="protocol">
+
+
+                    +------------------------------------+
+                    |1|    version    |         1        |
+                    +------------------------------------+
+                    |  Flags (8)  |  Length (24 bits)    |
+                    +------------------------------------+
+                    |X|           Stream-ID (31bits)     |
+                    +------------------------------------+
+                    |X| Associated-To-Stream-ID (31bits) |
+                    +------------------------------------+
+                    | Pri|Unused | Slot |                |
+                    +-------------------+                |
+                    | Number of Name/Value pairs (int32) |
+                    +------------------------------------+
+                    |     Length of name (int32)         |
+                    +------------------------------------+
+                    |           Name (string)            |
+                    +------------------------------------+
+                    |     Length of value  (int32)       |
+                    +------------------------------------+
+                    |          Value   (string)          |
+                    +------------------------------------+
+                    |           (repeats)                |
+    </slide>
+
+    <slide title="WebSocket RFC6455" class="protocol">
+
+
+
+         0                   1                   2                   3
+         0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+        +-+-+-+-+-------+-+-------------+-------------------------------+
+        |F|R|R|R| opcode|M| Payload len |    Extended payload length    |
+        |I|S|S|S|  (4)  |A|     (7)     |             (16/64)           |
+        |N|V|V|V|       |S|             |   (if payload len==126/127)   |
+        | |1|2|3|       |K|             |                               |
+        +-+-+-+-+-------+-+-------------+ - - - - - - - - - - - - - - - +
+        |     Extended payload length continued, if payload len == 127  |
+        + - - - - - - - - - - - - - - - +-------------------------------+
+        |                               |Masking-key, if MASK set to 1  |
+        +-------------------------------+-------------------------------+
+        | Masking-key (continued)       |          Payload Data         |
+        +-------------------------------- - - - - - - - - - - - - - - - +
+        :                     Payload Data continued ...                :
+        + - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - +
+        |                     Payload Data continued ...                |
+        +---------------------------------------------------------------+
+    </slide>
+
+    <slide title="What are WebSockets?">
+
+
+
+        <center><blockquote>WebSockets are a web technology providing full-duplex communications channels over a single TCP connection.</blockquote></center>
+    </slide>
+
+    <slide title="Example: draw something"><div ng-controller="slideDraw"><canvas id="imageView" width="800" height="585" drawing></canvas></div></slide>
+
+    <slide title="Ratchet">
+
+
+
+
+
+        <center><h3>(<a href="http://socketo.me" target="_blank">Ratchet</a> needs a logo)</h3></center>
+    </slide>
+
+    <slide title="Ratchet is...">
+        <ul>
+            <li>WebSockets in PHP</li>
+            <li>PSR-0 -- on <a href="http://packagist.org/packages/cboden/Ratchet" target="_blank">Packagist</a> -- on <a href="https://github.com/cboden/Ratchet" target="_blank">GitHub</a> -- <a href="https://travis-ci.org/cboden/Ratchet" target="_blank">unit tested</a></li>
+            <li>Built on top of React (asynchronous, interoperable)</li>
+            <li><a href="http://socketo.me/reports/ab" target="_blank">RFC6455 compliant</a></li>
+            <li>Made of loosely coupled components (middlewares)</li>
+        </ul>
+    </slide>
+
+    <slide title="Ratchet's decoration" class="protocol">
+
+
+                    +------------------------------------------------------+
+                    | I/O                                                  |
+                    |                                                      |
+                    |    +-------------------------------------------------+
+                    |    | HTTP                                            |
+                    |    |                                                 |
+                    |    |    +--------------------------------------------+
+                    |    |    | Router                                     |
+                    |    |    |                                            |
+                    |    |    |    +---------------------------------------+
+                    |    |    |    | WebSocket                             |
+                    |    |    |    |                                       |
+                    |    |    |    |    +----------------------------------+
+                    |    |    |    |    | *middleware* (WAMP, Logger)      |
+                    |    |    |    |    |                                  |
+                    |    |    |    |    |    +-----------------------------+
+                    |    |    |    |    |    | Your App                    |
+                    |    |    |    |    |    |                             |
+                    |    |    |    |    |    |                             |
+                    |    |    |    |    |    |                             |
+                    |    |    |    |    |    |                             |
+                    |    |    |    |    |    |                             |
+                    +----+----+----+----+----+-----------------------------+
+    </slide>
+
+    <slide title="WebSocket event API"><ul>
+            <li>onOpen</li>
+
+            <li>onMessage</li>
+
+            <li>onClose</li>
+
+            <li>onError</li>
+        </ul>
+    </slide>
+
+    <slide title="JavaScript sample" class="smallerCode"><pre class="code-only brush:JavaScript">var conn = new WebSocket('ws://{{host}}/chat');
+
+conn.onopen = function(e) {
+    console.log('Connection established');
+
+    var me = prompt('What is your name?', ''); // What is your quest?
+    conn.send('Hello everyone! I am ' + me);
+}
+
+conn.onmessage = function(e) {
+    console.log('ws-msg: ' + e.data);
+}
+
+conn.onclose = function(e) {
+    console.warn('Connection closed');
+    setTimeout(function() {
+        conn = new WebSocket('ws://{{host}}/chat');
+    }, 5000);
+}
+
+conn.onerror = function(e) {
+    console.error('Damnit!');
+}</pre></slide>
+
+    <slide title="PHP...but first" class="smallerCode"><div class="half right"><img src="img/composer.png"></div><div class="half left"><pre class="code-only">{
+    "require": {
+        "cboden/Ratchet": "0.2.*"
+    }
+}</pre></div><div class="clear"></div>...or... ♫Livin' on the Edge♫<pre class="code-only">{
+    "minimum-stability": "dev",
+    "require": {
+        "cboden/Ratchet": "0.3.*@dev"
+    }
+}</pre>
+    <p class="smaller terminal"><span class="generated">$</span> composer install
+    </p>
+    </slide>
+
+    <slide class="smallerCode"><pre class="code-only highlight: [5]; brush: php">&lt;?php
+use Ratchet\MessageComponentInterface;
+use Ratchet\ConnectionInterface;
+
+class Chat implements MessageComponentInterface {
+    protected $conns;
+    public function __construct() {
+        $this->conns = new \SplObjectStorage;
+    }
+
+    function onOpen(ConnectionInterface $conn) {
+        $this->conns->attach($conn);
+    }
+
+    function onMessage(ConnectionInterface $conn, $msg) {
+        foreach ($this->conns as $to) // Sorry for excluding the "{"
+            if ($conn != $to)         // Ran out of vertical space
+                $to->send($msg);      // Or how about "Pythonic"?
+    }
+
+    function onClose(ConnectionInterface $conn) {
+        $this->conns->detach($conn);
+    }
+
+    function onError(ConnectionInterface $conn, \Exception $e) { }
+}</pre></slide>
+
+    <slide title="Execution">
+        <pre class="code-only brush: php">&lt;?php
+// Ratchet/0.3
+$app = new Ratchet\App('hostname', 8080, '0.0.0.0');
+$app->route('/chat', new Chat);
+$app->run();
+</pre>
+
+
+        App.php <a href="https://github.com/cboden/Ratchet/blob/0.3/src/Ratchet/App.php" target="_blank">source</a>
+    </slide>
+
+    <slide title="WAMP (not what you think!)"><ul><li>JSON based protocol (human readable)</li>
+            <li>The Pub/Sub and RPC patterns</li>
+            <li>Middleware included in Ratchet</li>
+            <li>Official Javascript library</li>
+        </ul>
+        <center><a href="http://wamp.ws"><img src="img/wamp_logo.png"></a></center>
+    </slide>
+
+    <slide><ol start="0" class="smaller"><li>Welcome</li>
+        <li>Prefix</li>
+        <li>Call</li>
+        <li>Call Result</li>
+        <li>Call Error</li>
+        <li>Subscribe</li>
+        <li>Unsubscribe</li>
+        <li>Publish</li>
+        <li>Event</li></ol></slide>
+
+    <slide title="Publish/Subscribe pattern" class="protocol">
+
+
+
+
+            |\
+            | \
+            |  \
+            |   +---------------------------------------------------------+
+            |   |                            |                            |
+            |   |                            |    Topic 1                 |
+            |   |                            |                            |
+            |   |                            |----------------------------|
+            |   |                            |                            |
+            |   |    WebSocket Connection    |    Topic 2                 |
+            |   |                            |                            |
+            |   |                            |----------------------------| 
+            |   |                            |                            |
+            |   |                            |    Topic 3                 |
+            |   |                            |                            |
+            |   +---------------------------------------------------------+
+            |  /
+            | /
+            |/
+    </slide>
+
+    <slide title="RPC pattern (and promises)" class="protocol">
+
+
+
+
+
+
+
+              _  _
+             /_\/_\                                             :) Fulfilled 
+     +=======\_\/_/=======+                                    +-------------
+     |        //\\\------+|                                   /
+     |       //  ||to you||   (time passing)                 /
+     |        |  |+------+|--------------------------------->
+     |        |  |        |   Do not open until Christmas    \
+     |        |  |        |                                   \
+     +====================+                                    +-------------
+                                                                :(  Rejected
+
+    </slide>
+
+    <slide class="smallerCode"><pre class="code-only brush: php;">&lt;?php use Ratchet\ConnectionInterface as Conn;
+
+class BasicPubSub implements Ratchet\Wamp\WampServerInterface {
+    public function onPublish(Conn $conn, $topic, $event, array $exclude = array(), array $eligible = array()) {
+        $topic->broadcast($event);
+    }
+
+    public function onCall(Conn $conn, $id, $topic, array $params) {
+        $conn->callError($id, $topic, 'RPC not supported');
+    }
+
+    public function onOpen(Conn $conn) {
+    }
+
+    public function onClose(Conn $conn) {
+    }
+
+    public function onSubscribe(Conn $conn, $topic) {
+    }
+
+    public function onUnSubscribe(Conn $conn, $topic) {
+    }
+
+    public function onError(Conn $conn, \Exception $e) {
+    }
+}</pre></slide>
+
+    <slide title="AutobahnJS" class="smallerCode">
+    <pre class="code-only brush: jscript">
+var conn = new ab.Session(
+    'ws://' + window.location.host, 
+    function(sessId, v, srvId) {
+        console.log('Sess established to ' + srvId);
+
+        conn.subscribe('wamp-demo', function(topic, data) {
+            console.log('msg from ' + topic + ':');
+            console.log(data);
+        });
+    }, function(code) {
+        console.warm('WAMP session closed with code: ' + code);
+    }, {
+        'skipSubprotocolCheck': true
+    }
+); // Stop copy/paste here
+
+conn.publish('wamp-demo', 'Hello demo peeps!');
+
+conn.close();
+</pre>
+    </slide>
+
+    <slide title="Hello, Async? Yes, this is sync." class="smallerCode">
+        <pre class="code-only"></pre>
+        <pre class="code-only"></pre>
+    </slide>
+
+    <slide title="WebSocket Browser Support">
+
+
+
+
+        <center><img src="img/ws-support.png"></center>
+    </slide>
+
+    <slide title="WebSocket gotcha's"><ul>
+            <li>Pollyfill IE: 7, 8, 9 -- Flash &bull; SockJS &bull; Socket.IO</li>
+            <li>iOS buffers like nobody's business</li>
+            <li>Beware aggressive proxies (use SSL)</li>
+            <li>Horizontally scaling is harder than sync stacks</li>
+            <li>Race conditions <del>may</del> will happen</li>
+            <li>1 process to bring them all together - 1 error to ruin them all</li>
+    </ul></slide>
+
+    <slide title="Develop with caution">
+        <center><img src="img/evented-programming.gif"></center>
+
+        <p class="smaller terminal generated">PHP Fatal error:  Call to a member function detach() on a non-object in /socketo.me/src/Ratchet/Examples/Tutorial/ChatRoom.php on line 170</p>
+    </slide>
+
+    <slide title="Questions?">
+
+
+
+
+        <ul>
+            <li><a href="https://twitter.com/boden_c" target="_blank">@boden_c</a></li>
+            <li><a href="http://reactphp.org" target="_blank">reactphp.org</a></li>
+            <li><a href="http://socketo.me" target="_blank">socketo.me</a></li>
+            <li><a href="https://github.com/cboden/presentr" target="_blank">Presentr</a></li>
+        </ul></slide>
+
+    <div id="slideCounter" ng-controller="OnlineCtrl">
+                         <span title="Live slideshow status">{{status}}</span> 
+        &nbsp; -- &nbsp; <span title="Slide number/total">{{currentSlide}} / {{slideCount}}</span> 
+        &nbsp; -- &nbsp; <span title="Peers on this slide/overall">{{peers}}/<span>{{connected}}</span></span>
+    </div>
+
+<!--
+    <div id="slideCounter">
+                         <span ng-controller="OnlineCtrl" title="Live slideshow status">{{status}}</span> 
+        &nbsp; -- &nbsp; <span title="Slide number/total">{{currentSlide}} / {{slideCount}}</span> 
+        &nbsp; -- &nbsp; <span title="Peers on this slide/overall">{{peers}}/<span ng-controller="OnlineCtrl">{{peers}}</span></span>
+    </div>
+-->
+</body>
+    <script>
+        var addPath = '';
+        window.define = function(factory) {
+            try{ delete window.define; } catch(e){ window.define = void 0; } // IE
+            window.when = factory();
+        };
+        window.define.amd = {};
     </script>
 
-
+<!--     <script src="scripts/jquery-1.9.1.js"></script> -->
+    <script src="bower_components/when/when.js"></script>
+    <script src="bower_components/autobahnjs/autobahn/autobahn.js"></script>
     <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+    <script src="bower_components/SyntaxHighlighter/scripts/XRegExp.js"></script>
+    <script src="bower_components/SyntaxHighlighter/scripts/shCore.js"></script>
+    <script src="bower_components/SyntaxHighlighter/scripts/shBrushJScript.js"></script>
+    <script src="bower_components/SyntaxHighlighter/scripts/shBrushXml.js"></script>
+    <script src="bower_components/SyntaxHighlighter/scripts/shBrushPhp.js"></script>
+    
+    <link rel="stylesheet" href="styles/fonts.css" type="text/css">
+    <link rel="stylesheet" href="bower_components/SyntaxHighlighter/styles/shCore.css" type="text/css">
+    <link rel="stylesheet" href="bower_components/SyntaxHighlighter/styles/shThemeDefault.css" type="text/css">
+    <link rel="stylesheet" href="styles/presentation.css" type="text/css">
 
-        <!-- build:js scripts/modules.js -->
-        <script src="bower_components/angular-resource/angular-resource.js"></script>
-        <script src="bower_components/angular-cookies/angular-cookies.js"></script>
-        <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
-        <!-- endbuild -->
-
-        <!-- build:js({.tmp,app}) scripts/scripts.js -->
-        <script src="scripts/app.js"></script>
-        <script src="scripts/controllers/main.js"></script>
-        <!-- endbuild -->
-</body>
+    <script src="scripts/slide.js"></script>
+    <script src="scripts/slide-directives.js"></script>
 </html>
