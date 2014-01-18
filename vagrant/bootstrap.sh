@@ -1,5 +1,5 @@
-/sbin/ifconfig eth1 192.168.1.101 netmask 255.255.255.0 up
-/sbin/route add default gw 192.168.1.1 eth1
+#/sbin/ifconfig eth1 192.168.1.101 netmask 255.255.255.0 up
+#/sbin/route add default gw 192.168.1.1 eth1
 
 service nginx start
 service haproxy start

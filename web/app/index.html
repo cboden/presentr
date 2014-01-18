@@ -20,7 +20,8 @@
 
 
 
-        <p class="right">by: Chris Boden</p>
+
+        <p class="left">http://{{host}}</p><p class="right">by: Chris Boden</p>
         </div>
     </slide>
     
@@ -47,7 +48,7 @@
 
 
 
-                    Request: http://localhost/hello.php
+                    Request: http://{{host}}/hello.php
 +------------------+                                               +------------------+
 |                  |----------------------------------------------&gt;|                  |
 |                  |                                               |                  |
@@ -184,10 +185,10 @@ Host: {{host}}
 $db = new mysqli($host, $user, $pass, $name);
 $r = $db->query("SELECT aRow FROM table LIMIT 1");
 $d = $r->fetch_assoc();
-print_r($data);</pre>
+print_r($d);</pre>
 
 
-        <p>Wouldn't that suck if print_r($data); happened before MySQL returned your row?</p>
+        <p>Wouldn't that suck if print_r($d); happened before MySQL returned your row?</p>
     </slide>
 
     <slide title="The event loop">
@@ -229,6 +230,14 @@ print_r($data);</pre>
 
         <center><img src="img/telephone-operator.jpg"></center>
     </slide>
+    
+    <slide>
+        <center>
+            <blockquote class="twitter-tweet" lang="en"><p><a href="https://twitter.com/search?q=%23reactphp&amp;src=hash">#reactphp</a> for those php developers to lazy to learn javascript and nodejs.</p>&mdash; Ben Carter (@BenCarterDev) <a href="https://twitter.com/BenCarterDev/statuses/400454234069815296">November 13, 2013</a></blockquote>
+            
+            <blockquote class="twitter-tweet" lang="en"><p>If it quacks like a duck, but looks like a cat with a horse head, it must be JavaScript.</p>&mdash; Rodney Rehm (@rodneyrehm) <a href="https://twitter.com/rodneyrehm/statuses/398053479669055488">November 6, 2013</a></blockquote>
+        </center>
+    </slide>
 
     <slide title="React is:">
         <ul>
@@ -240,6 +249,15 @@ print_r($data);</pre>
     </slide>
 
 <!--     <slide><img src="img/get-on-with-it.jpg" class="center"></slide> -->
+
+    <slide>
+
+
+
+        <center>    
+            <blockquote class="twitter-tweet" lang="en"><p>If you&#39;re writing a daemon and PHP leaks memory, with 99.9% probability it&#39;s your own fault. PHP just can&#39;t free values you still reference.</p>&mdash; Nikita Popov (@nikita_ppv) <a href="https://twitter.com/nikita_ppv/statuses/384634404103929856">September 30, 2013</a></blockquote>
+        </center>
+    </slide>
 
     <slide title="getcomposer.org" class="smallerCode">
         <div class="half right"><img src="img/composer.png"></div>
@@ -323,33 +341,15 @@ $loop->run();</pre>
         <p>React lets you easily traffic data between services and connections.</p>
     </slide>
 
-    <slide title="(a few) React libraries"><ul><li><a href="https://github.com/reactphp/event-loop" target="_blank">event-loop</a></li>
-            <li><a href="https://github.com/reactphp/socket" target="_blank">socket</a></li>
-            <li><a href="https://github.com/reactphp/stream" target="_blank">stream</a></li>
-            <li><a href="https://github.com/reactphp/promise" target="_blank">promise</a></li>
-            <li><a href="https://github.com/reactphp/dns" target="_blank">dns</a></li>
-            <li><a href="https://github.com/reactphp/zmq" target="_blank">zmq</a></li>
-            <li><a href="https://github.com/reactphp/stomp" target="_blank">stomp</a></li></ul></slide>
-
-    <slide title="React\LoopInterface">
-        <ul>
-            <li>StreamSelectLoop -- works on all systems</li>
-            <li>LibEventLoop -- currently best option</li>
-            <li>LibEvLoop -- alpha</li>
-            <li>LibUvLoop -- testing in PR</li>
-            <li>EventLoop -- testing in PR</li>
-        </ul>
-    </slide>    
-
     <slide title="pro&bull;to&bull;col">
         <center><blockquote>A standard procedure for regulating data transmission between computers.</blockquote></center>
 
         <p class="terminal">110111000101011101101000012</p>
 
 
-        <center><blockquote>English, motherfucker, do you speak it?</blockquote></center>
+        <center><blockquote>English, mother!@#$er, do you speak it?</blockquote></center>
 
-        <a href="https://igor.io/2012/09/24/binary-parsing.html" target="_blank">@igorwsome on binary parsing in php</a>
+        <a href="https://igor.io/2012/09/24/binary-parsing.html" target="_blank">@igorwhiletrue on binary parsing in php</a>
     </slide>
 
     <slide title="JSON RFC4627">
@@ -419,6 +419,259 @@ $loop->run();</pre>
                     +------------------------------------+
                     |           (repeats)                |
     </slide>
+    
+    <slide title="Redis" class="protocol">
+    
+    
+    
+*&lt;number of arguments&gt; CR LF
+$&lt;number of bytes of argument 1&gt; CR LF
+&lt;argument data&gt; CR LF
+...
+$&lt;number of bytes of argument N&gt; CR LF
+&lt;argument data&gt; CR LF
+    </slide>
+        
+    <slide title="(a few) React libraries"><ul><li><a href="https://github.com/reactphp/event-loop" target="_blank">event-loop</a></li><li><a href="https://github.com/reactphp/socket" target="_blank">socket</a></li><li><a href="https://github.com/reactphp/stream" target="_blank">stream</a></li><li><a href="https://github.com/reactphp/promise" target="_blank">promise</a></li><li><a href="https://github.com/reactphp/dns" target="_blank">dns</a></li><li><a href="https://github.com/reactphp/zmq" target="_blank">zmq</a></li><li><a href="https://github.com/reactphp/stomp" target="_blank">stomp</a><li><a href="https://github.com/reactphp/http" target="_blank">http</a></li><li><a href="https://github.com/reactphp/http-client" target="_blank">http-client</a></li><li><a href="https://github.com/reactphp/socket-client" target="_blank">socket-client</a></li></li></ul></slide>
+            
+    <slide title="LoopInterface" class="smallerCode"><pre class="code-only">&lt;php
+namespace React\EventLoop;
+use React\EventLoop\Timer\TimerInterface;
+
+interface LoopInterface {
+    public function addReadStream($stream, $listener);
+    public function addWriteStream($stream, $listener);
+
+    public function removeReadStream($stream);
+    public function removeWriteStream($stream);
+    public function removeStream($stream);
+
+    public function addTimer($interval, $callback);
+    public function addPeriodicTimer($interval, $callback);
+    public function cancelTimer(TimerInterface $timer);
+    public function isTimerActive(TimerInterface $timer);
+
+    public function tick();
+    public function run();
+    public function stop();
+}</pre></slide>
+
+    <slide title="React\LoopInterface">
+        <ul>
+            <li>StreamSelectLoop -- works on all systems</li>
+            <li>LibEventLoop -- currently best option</li>
+            <li>LibEvLoop -- Added in 0.3</li>
+            <li>LibUvLoop -- testing in PR</li>
+            <li>EventLoop -- testing in PR</li>
+        </ul>
+    </slide>
+    
+    <slide>
+
+
+        <!-- may have to replace with image -->
+        <center>
+            <blockquote class="twitter-tweet" lang="en"><p>The film Inception is just trying to explain &quot;callback hell&quot; via a more mainstream medium.</p>&mdash; I Am Devloper (@iamdevloper) <a href="https://twitter.com/iamdevloper/statuses/382622813049614336">September 24, 2013</a></blockquote>
+        </center>
+    </slide>
+    
+    <slide title="Promises" class="protocol">
+
+
+
+
+
+
+
+              _  _
+             /_\/_\                                             :) Fulfilled 
+     +=======\_\/_/=======+                                    +-------------
+     |        //\\\------+|                                   /
+     |       //  ||to you||   (time passing)                 /
+     |        |  |+------+|--------------------------------->
+     |        |  |        |   Do not open until Christmas    \
+     |        |  |        |                                   \
+     +====================+                                    +-------------
+                                                                :(  Rejected
+
+    </slide>
+    
+    <slide title="DNS Promise">
+    
+<pre class="code-only brush: php">&lt;?php
+
+$loop = React\EventLoop\Factory::create();
+$factory = new React\Dns\Resolver\Factory();
+$dns = $factory->create('8.8.8.8', $loop);
+
+$dns
+    ->resolve('reactphp.org')
+    ->then(function($ip) {
+        echo "Host: $ip\n";
+    });
+    </pre></slide>
+    
+    <slide title="Reuse the Result">
+<pre class="code-only brush: php">&lt;?php
+
+$loop = React\EventLoop\Factory::create();
+$factory = new React\Dns\Resolver\Factory();
+$dns = $factory->create('8.8.8.8', $loop);
+
+$dnsPromise = $dns->resolve('reactphp.org');
+
+$dnsPromise->then(function($ip) {
+    echo "Host: $ip\n";
+});
+
+$dnsPromise->then(function($ip) {
+    // do something else with the result
+    // no extra I/O
+});
+    </pre></slide>
+    
+    <slide title="The Deferred object" class="protocol">
+
+
+
+
+
+
+                         +-----------------------------+
+                         |                             |
+                         |          Deferred           |
+                         |                             |
+                         +--------------+--------------+
+                         |              |              |
+                         |    Promise   |   Resolver   |
+                         |              |              |
+                         +--------------+--------------+
+                                 |              |
+                                 |              |
+                                 |              |
+                                 V              V
+                              Consumer       Producer
+                               * then()       * resolve()
+                                              * reject()
+    </slide>
+    
+    <slide title="Internally managing a promise" class="smallerCode"><pre class="code-only brush: php">&lt;?php
+$randomPromise = function(React\EventLoop\LoopInterface $loop) {
+    $deferred = new React\Promise\Deferred();
+     
+    $loop->addTimer(1, function() use ($deferred) {
+        $num = rand();
+        if (0 === $num % 2) {
+            return $deferred->resolve($num);
+        }
+        $deferred->reject($num);
+    });
+ 
+    return $deferred->promise();
+};
+
+$loop = React\EventLoop\Factory::create();
+$randomPromise($loop)->then(function($num) {
+    echo "Promise resolved with even {$num}\n";
+}, function($num) {
+    echo "Promise was rejected with odd {$num}\n";
+});
+
+$loop->run();
+    </pre></slide>
+    
+    <slide title="Wait For It..." class="smallerCode"><pre class="code-only brush: php">&lt;?php
+$user = "Robert'); DROP TABLE users;";
+
+$hP  = \Fake\asyncRest("http://api.example.com/{$user}");
+$qP  = \Fake\asyncQ("SELECT * FROM `users` WHERE `user` = {$user}");
+
+React\Promise\all([$hP, $qP])->then(function($results) {
+    list($httpResult, $queryResult) = $results;
+
+    // Compare data, sync if necessary
+});
+    </pre></slide>
+    
+    <slide title="Streams and the Stream API">
+        <ul>
+            <li>Wraps a PHP Stream resource</li>
+            <li>Registers with the EventLoop</li>
+            <li>Readable and/or Writable</li>
+            <li>Bufferes data</li>
+        </ul>
+    </slide>
+    
+    <slide title="ReadableStreamInterface">
+        <ul>
+            <li>bool isReadable()</li>
+            <li>pause()</li>
+            <li>resume()</li>
+            <li>pipe(WritableStreamInterface $dest)</li>
+            <li>close()</li>
+        </ul>
+    </slide>
+
+    <slide title="WritableStreamInterface">
+        <ul>
+            <li>isWritable()</li>
+            <li>write($data)</li>
+            <li>end($data = null)</li>
+            <li>close()</li>
+        </ul>
+    </slide>
+
+    <slide title="Coming soon"><ul><li>ChildProcess (thanks <a href="https://twitter.com/jmikola" target="_blank">@jmikola</a>)</li>
+            <li>EvnetLoopInterface::nextTick() (thanks <a href="https://twitter.com/jmalloc" target="_blank">@jmalloc</a>)</li>
+            <li>New A+ Promise API - ALL THE THINGS! (thanks <a href="https://twitter.com/jansor" target="_blank">@jansor</a>)</li>
+            <li>UDP support (thanks <a href="https://twitter.com/another_clue" target="_blank">@another_clue</a>)</li>
+            <li>Refactored EventLoopInterface API</li>
+            <li>refactored EventLoopInterface implementation</li>
+            <li>an easier framework?</li></ul></slide>
+            
+    <slide title="Questions?">
+
+
+
+
+
+        <ul>
+            <li><a href="https://joind.in/10436" target="_blank">https://joind.in/10436</a></li>
+            <li><a href="https://twitter.com/boden_c" target="_blank">@boden_c</a></li>
+            <li><a href="http://reactphp.org" target="_blank">reactphp.org</a></li>
+            <li><a href="https://github.com/cboden/presentr" target="_blank">Presentr</a></li></ul></slide>
+
+    <slide title="WebSockets!" class="react">
+        <div class="center">
+<!--             <img src="img/connectivity.png" width="256" height="256"> -->
+            <img src="img/connectivity-orange.png">
+        
+
+
+
+        <p class="left">http://{{host}}</p><p class="right">by: Chris Boden</p>
+        </div>
+    </slide>
+
+    <slide title="What are WebSockets?">
+
+
+
+        <center><blockquote>WebSockets are a web technology providing full-duplex communications channels over a single TCP connection.</blockquote></center>
+    </slide>
+    
+    <slide title="How does this work?">
+    
+        <center>
+            <img src="img/holding-door.jpg">
+        </center>
+    </slide>
+    
+    <slide style="background-color: #D3DFD1"><center><img src="img/wat.jpg"></center></slide>
+    
+    <slide title="Recognizing a WebSocket request">
+        <center><img src="img/magnifyingglass.gif"></center>
+    </slide>
 
     <slide title="WebSocket RFC6455" class="protocol">
 
@@ -444,13 +697,6 @@ $loop->run();</pre>
         +---------------------------------------------------------------+
     </slide>
 
-    <slide title="What are WebSockets?">
-
-
-
-        <center><blockquote>WebSockets are a web technology providing full-duplex communications channels over a single TCP connection.</blockquote></center>
-    </slide>
-
     <slide title="Example: draw something"><div ng-controller="slideDraw"><canvas id="imageView" width="800" height="585" drawing></canvas></div></slide>
 
     <slide title="Ratchet">
@@ -461,7 +707,7 @@ $loop->run();</pre>
 
         <center><h3>(<a href="http://socketo.me" target="_blank">Ratchet</a> needs a logo)</h3></center>
     </slide>
-
+    
     <slide title="Ratchet is...">
         <ul>
             <li>WebSockets in PHP</li>
@@ -470,34 +716,6 @@ $loop->run();</pre>
             <li><a href="http://socketo.me/reports/ab" target="_blank">RFC6455 compliant</a></li>
             <li>Made of loosely coupled components (middlewares)</li>
         </ul>
-    </slide>
-
-    <slide title="Ratchet's decoration" class="protocol">
-
-
-                    +------------------------------------------------------+
-                    | I/O                                                  |
-                    |                                                      |
-                    |    +-------------------------------------------------+
-                    |    | HTTP                                            |
-                    |    |                                                 |
-                    |    |    +--------------------------------------------+
-                    |    |    | Router                                     |
-                    |    |    |                                            |
-                    |    |    |    +---------------------------------------+
-                    |    |    |    | WebSocket                             |
-                    |    |    |    |                                       |
-                    |    |    |    |    +----------------------------------+
-                    |    |    |    |    | *middleware* (WAMP, Logger)      |
-                    |    |    |    |    |                                  |
-                    |    |    |    |    |    +-----------------------------+
-                    |    |    |    |    |    | Your App                    |
-                    |    |    |    |    |    |                             |
-                    |    |    |    |    |    |                             |
-                    |    |    |    |    |    |                             |
-                    |    |    |    |    |    |                             |
-                    |    |    |    |    |    |                             |
-                    +----+----+----+----+----+-----------------------------+
     </slide>
 
     <slide title="WebSocket event API"><ul>
@@ -510,6 +728,28 @@ $loop->run();</pre>
             <li>onError</li>
         </ul>
     </slide>
+
+    <slide title="The Interfaces" class="smallerCode">
+<pre class="code-only">&lt;php
+namespace Ratchet;
+
+interface ComponentInterface {
+    function onOpen(ConnectionInterface $conn);
+
+    function onMessage(ConnectionInterface $from, $msg);
+
+    function onClose(ConnectionInterface $conn);
+
+    function onError(ConnectionInterface $conn, \Exception $e);
+}
+
+
+interface ConnectionInterface {
+    function send($data);
+
+    function close();
+}
+    </pre></slide>
 
     <slide title="JavaScript sample" class="smallerCode"><pre class="code-only brush:JavaScript">var conn = new WebSocket('ws://{{host}}/chat');
 
@@ -526,27 +766,25 @@ conn.onmessage = function(e) {
 
 conn.onclose = function(e) {
     console.warn('Connection closed');
-    setTimeout(function() {
-        conn = new WebSocket('ws://{{host}}/chat');
-    }, 5000);
+//    setTimeout(function() {
+//        conn = new WebSocket('ws://{{host}}/chat');
+//    }, 5000);
 }
 
 conn.onerror = function(e) {
     console.error('Damnit!');
 }</pre></slide>
 
-    <slide title="PHP...but first" class="smallerCode"><div class="half right"><img src="img/composer.png"></div><div class="half left"><pre class="code-only">{
+    <slide title="PHP...but first" class="smallerCode">
+    
+    <div class="half right"><img src="img/composer.png"></div><div class="half left"><pre class="code-only">{
     "require": {
-        "cboden/Ratchet": "0.2.*"
+        "cboden/Ratchet": "0.3.*"
     }
-}</pre></div><div class="clear"></div>...or... ♫Livin' on the Edge♫<pre class="code-only">{
-    "minimum-stability": "dev",
-    "require": {
-        "cboden/Ratchet": "0.3.*@dev"
-    }
-}</pre>
-    <p class="smaller terminal"><span class="generated">$</span> composer install
-    </p>
+}</pre></div><div class="clear"></div>
+
+
+    <p class="smaller terminal"><span class="generated">$</span> composer install</p>
     </slide>
 
     <slide class="smallerCode"><pre class="code-only highlight: [5]; brush: php">&lt;?php
@@ -585,9 +823,41 @@ $app->run();
 </pre>
 
 
-        App.php <a href="https://github.com/cboden/Ratchet/blob/0.3/src/Ratchet/App.php" target="_blank">source</a>
+        App.php <a href="https://github.com/cboden/Ratchet/blob/master/src/Ratchet/App.php" target="_blank">source</a>
     </slide>
 
+    <slide title="Ratchet's decoration" class="protocol">
+
+
+                    +------------------------------------------------------+
+                    | I/O                                                  |
+                    |                                                      |
+                    |    +-------------------------------------------------+
+                    |    | HTTP                                            |
+                    |    |                                                 |
+                    |    |    +--------------------------------------------+
+                    |    |    | Router                                     |
+                    |    |    |                                            |
+                    |    |    |    +---------------------------------------+
+                    |    |    |    | WebSocket                             |
+                    |    |    |    |                                       |
+                    |    |    |    |    +----------------------------------+
+                    |    |    |    |    | *middleware* (WAMP, Logger)      |
+                    |    |    |    |    |                                  |
+                    |    |    |    |    |    +-----------------------------+
+                    |    |    |    |    |    | Your App                    |
+                    |    |    |    |    |    |                             |
+                    |    |    |    |    |    |                             |
+                    |    |    |    |    |    |                             |
+                    |    |    |    |    |    |                             |
+                    |    |    |    |    |    |                             |
+                    +----+----+----+----+----+-----------------------------+
+    </slide>
+    
+    <slide title="Included"><ul>
+        <li>IoServer</li><li>FlashPolicy</li><li>EchoServer</li><li>IpBlackList</li><li>HttpServer</li><li>OriginCheck</li><li>Router</li><li>SessionProvider</li><li>WsServer</li><li>WampServer</li>
+    </ul></slide>
+    
     <slide title="WAMP (not what you think!)"><ul><li>JSON based protocol (human readable)</li>
             <li>The Pub/Sub and RPC patterns</li>
             <li>Middleware included in Ratchet</li>
@@ -703,10 +973,13 @@ conn.publish('wamp-demo', 'Hello demo peeps!');
 conn.close();
 </pre>
     </slide>
-
-    <slide title="Hello, Async? Yes, this is sync." class="smallerCode">
-        <pre class="code-only"></pre>
-        <pre class="code-only"></pre>
+    
+    <slide title="STOMP">
+        <ul><li>Another text-based protocol</li>
+        <li>Not (yet) supported by Ratchet</li>
+        <li>Implemented in React</li>
+        <li>Pub/Sub, Transactions, wire meta</li>
+        </ul>
     </slide>
 
     <slide title="WebSocket Browser Support">
@@ -716,28 +989,123 @@ conn.close();
 
         <center><img src="img/ws-support.png"></center>
     </slide>
-
+    
+    <slide>    
+        <center><img src="img/browsers.png"></center>
+    </slide>
+    
     <slide title="WebSocket gotcha's"><ul>
-            <li>Pollyfill IE: 7, 8, 9 -- Flash &bull; SockJS &bull; Socket.IO</li>
-            <li>iOS buffers like nobody's business</li>
-            <li>Beware aggressive proxies (use SSL)</li>
+            <li>Supporting IE: 7, 8, 9</li>
+            <li>iOS &lt; 7 buffers like nobody's business</li>
+            <li>Beware aggressive proxies</li>
             <li>Horizontally scaling is harder than sync stacks</li>
             <li>Race conditions <del>may</del> will happen</li>
             <li>1 process to bring them all together - 1 error to ruin them all</li>
     </ul></slide>
+    
+    <slide title="Supporting &quot;Browsers&quot; with Flash">
+
+
+
+        <p class="left" style="margin-left: 40px">Pros</p><p class="right" style="padding-right: 280px">Cons</p>
+
+        <ul class="left"><li>Very easy to implement</li><li>True polyfill</li><li>They're IE users anyway</li></ul><ul class="right" style="padding-right: 40px;"><li>It's Flash...&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</li><li>Up to 3 second connect</li><li>Port blocked by proxies</li></ul>
+    </slide>
+    
+    <slide title="Reverse Proxying (+SSL)">
+        <ul>
+            <li>React/Ratchet will not support SSL for server</li>
+            
+            <li>Nginx</li>
+            <li>HAProxy</li>
+            <li>STunnel</li>
+        </ul>
+    </slide>
+
+    <slide title="Inter-Process Communication">
+    
+    
+    
+    
+        <center>
+            <img src="img/zmq.gif">
+        </center>
+    </slide>
+    
+    <slide title="Hello, Async? Yes, this is sync." class="smallerCode">
+
+Client:    
+        <pre class="code-only">$context = new ZMQContext();
+$socket = $context->getSocket(ZMQ::SOCKET_PUSH, 'myPersistentId');
+$socket->connect("tcp://localhost:5555");
+$socket->send($_POST['msg']);</pre>
+Server:
+        <pre class="code-only">/* Previous WebSocket code */
+$context = new React\ZMQ\Context($loop);
+$pull = $context->getSocket(ZMQ::SOCKET_PULL);
+$pull->bind('tcp://127.0.0.1:5555');
+$pull->on('message', array($ratchetClass, 'injMethod'));
+$loop->run();
+</pre>
+    </slide>
+    
+    <slide>
+    
+    
+        <center><img src="img/haters.jpg"></center>
+    </slide>
+
+    <slide title="Going Polyglot">
+        <ul><li>Python - AutobahnPython</li>
+        <li>Node - SockJS | Faye</li>
+        <li>Ruby - EventMachine | Faye</li>
+        <li>Erlang - Cowboy</li>
+        <li>Go - Gorilla</li></ul>
+    </slide>
+    
+    <slide title="Speaking with other things">
+        <ul><li>ZeroMQ</li>
+        <li>DNode</li>
+        <li>RabbitMQ</li>
+        </ul>
+    </slide>
+    
+    <slide>
+    
+    
+        <center>
+            <blockquote class="twitter-tweet" lang="en"><p>Knock knock&#10;Race condition&#10;Who&#39;s there?</p>&mdash; I Am Devloper (@iamdevloper) <a href="https://twitter.com/iamdevloper/statuses/399991896862638081">November 11, 2013</a></blockquote>
+        </center>
+    </slide>
 
     <slide title="Develop with caution">
         <center><img src="img/evented-programming.gif"></center>
 
         <p class="smaller terminal generated">PHP Fatal error:  Call to a member function detach() on a non-object in /socketo.me/src/Ratchet/Examples/Tutorial/ChatRoom.php on line 170</p>
     </slide>
+    
+<!--
+    <slide title="Security">
+        <ul><li>CSRF</li>
+        <li>Same Origin policy</li>
+        </ul>
+    </slide>
+-->
+    
+    <slide title="The future?">
+        <ul>
+            <li>HHVM?</li>
+            <li>Async session management</li>
+            <li>Socket.IO and/or SockJS support</li>
+            <li>Binary message support</li>
+        </ul>
+    </slide>
 
     <slide title="Questions?">
 
 
-
-
         <ul>
+            <li><a href="https://joind.in/10437" target="_blank">https://joind.in/10437</a></li>
             <li><a href="https://twitter.com/boden_c" target="_blank">@boden_c</a></li>
             <li><a href="http://reactphp.org" target="_blank">reactphp.org</a></li>
             <li><a href="http://socketo.me" target="_blank">socketo.me</a></li>
@@ -777,6 +1145,7 @@ conn.close();
     <script src="bower_components/SyntaxHighlighter/scripts/shBrushJScript.js"></script>
     <script src="bower_components/SyntaxHighlighter/scripts/shBrushXml.js"></script>
     <script src="bower_components/SyntaxHighlighter/scripts/shBrushPhp.js"></script>
+    <script async src="http://platform.twitter.com/widgets.js" charset="utf-8"></script>
     
     <link rel="stylesheet" href="styles/fonts.css" type="text/css">
     <link rel="stylesheet" href="bower_components/SyntaxHighlighter/styles/shCore.css" type="text/css">

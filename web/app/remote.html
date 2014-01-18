@@ -34,7 +34,7 @@ $(document).ready(function($) {
     var conn;
     var reload = false;
     var once   = false;
-
+    
     $('#remote').hide();
     $auth.submit(function(e) {
         e.preventDefault();
@@ -75,7 +75,7 @@ $(document).ready(function($) {
         // Because "FUCK YOU" iOS
         conn.send('!' + Math.random() + Math.random() + Math.random() + Math.random());
     });
-    
+
     $('#next').click(function(e) {
         $num.val(parseInt($num.val(), 10) + 1);
         $page.submit();

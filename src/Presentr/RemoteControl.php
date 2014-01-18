@@ -28,11 +28,11 @@ class RemoteControl implements MessageComponentInterface, WsServerInterface {
         if (static::PASSWORD != $conn->WebSocket->request->getHeader('Sec-WebSocket-Protocol', true)) {
             return $conn->close(1008);
         }
-    
+
         $this->_delegate->enableRemote();
         $this->_thereCanOnlyBeOne = true;
     }
-    
+
     public function onMessage(Conn $conn, $msg) {
         if ('!' == $msg[0]) {
             return;

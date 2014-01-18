@@ -2,6 +2,7 @@
 use React\EventLoop\Factory;
 use React\Socket\Server as Reactor;
 
+    require __DIR__ . '/config.php';
     require __DIR__ . '/../vendor/autoload.php';
 
     $loop = Factory::create();
@@ -12,7 +13,7 @@ use React\Socket\Server as Reactor;
     $delegates = (new Presentr\ControllableComposite);
     $delegates->add($show)->add($notes);
 
-    $app = new Ratchet\App('localhost', 8080, '127.0.0.1', $loop);
+    $app = new Ratchet\App($cfg['host'], 8080, '127.0.0.1', $loop);
     $app->route('/', $show);
     $app->route('/notes', $notes);
     $app->route('/control', new Presentr\RemoteControl($delegates));
@@ -49,7 +50,7 @@ use React\Socket\Server as Reactor;
     });
 
     $sock2_electric_boogaloo = new Reactor($loop);
-    $sock2_electric_boogaloo->listen(9001, '0.0.0.0');
+    $sock2_electric_boogaloo->listen(9001);//, '0.0.0.0');
     $sock2_electric_boogaloo->on('connection', function($conn) use ($conns) {
         $conn->on('data', function($data) use ($conns, $conn) {
             foreach ($conns as $o_conn) {

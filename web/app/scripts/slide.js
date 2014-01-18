@@ -212,7 +212,8 @@ angular.module('slides', ['ui.router'])
     }
 
     // If things break look at this hard coded number!!!
-    live.softSubscribe('slide32', this.serverDraw);
+    // cBFu
+    live.softSubscribe('slide39', this.serverDraw);
 /*
     setTimeout(function() {
         $scope.compDraw.push([200, 400, 22, 44]);

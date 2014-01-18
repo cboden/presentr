@@ -5,7 +5,7 @@
     <title>React - Speaker Notes</title>
 </head>
 
-<body ng-controller="SlideCtrl">
+<body ng-controller="SlideCtrl" slideshow>
 
 <!--
     Still need to comment on:
@@ -15,7 +15,6 @@
     <slide><ul>
         <li>You are Chris. Author of Ratchet, co-author of React</li>
         <li>Open source enthusiast, passion for real-time applications</li>
-        <li>Thanks. Beta testing Ratchet 0.3. Reminded me why React/Ratchet - programming should be fun</li>
         <li>I'd tell you a UDP joke, but you might not get it</li>
     </ul></slide>
     
@@ -46,7 +45,7 @@
         <li>running processes communicating with each other</li>
         <li>your request will eventually get routed to its destination</li>
         <li>who's configured a server before?</li>
-        <li>goto: 9 or 14</li>
+        <li>goto: 10 or 15</li>
     </ul></slide>
 
     <slide><ul>
@@ -62,12 +61,12 @@
     <slide><ul>
         <li>strip away another</li>
         <li>one server can host multiple domains. must Host: header specifies which domain you're asking for</li>
-        <li>goto: 6 -- remove nginx/fpm</li>
     </ul></slide>
 
     <slide><ul>
         <li>below the tcp layer is the IP layer</li>
         <li>only one process can be bound to a port</li>
+        <li>goto: 6 -- remove nginx/fpm</li>
     </ul></slide>
 
     <slide><ul>
@@ -89,6 +88,7 @@
 
     <slide><ul>
         <li>loops waiting for an event to happen, when an event happens it executes code and waits for the next event</li>
+        <li>This loop will get bigger and longer the more execution is done per tick</li>
     </ul></slide>
 
     <slide><ul>
@@ -119,6 +119,13 @@
         <li>PSR-2, unit tested, blah, blah, blah</li>
         
     </ul></slide>
+    
+    <slide><ul>
+        <li>PHP, as of 5.3, has had garbage collection</li>
+    </ul></slide>
+    
+    <slide><ul>
+    </ul></slide>
 
     <slide><ul>
         <li>intro - uses javascript like event syntax</li>
@@ -141,6 +148,27 @@
     </ul></slide>
 
     <slide><ul>
+        <li>that's how you talk to processes, but what good is it?</li>
+        <li>how systems agree to communicate with eachother</li>
+        <li>unstructured, raw data</li>
+    </ul></slide>
+    
+    <slide><ul>
+    </ul></slide>
+
+    <slide><ul>
+        <li>Igor wrote async DNS for PHP</li>
+        <li>goto: 36</li>
+    </ul></slide>
+
+    <slide><ul>
+    </ul></slide>
+
+    <slide><ul>
+        <li>Redis done by nrk</li>
+    </ul></slide>
+
+    <slide><ul>
         <li>socket - open sockets, binds to ports, communicates over tcp</li>
         <li>stream - wrapper with helpers, underlying socket, will be used for EIO</li>
         <li>promise - answer to nested callbacks (more later)</li>
@@ -148,42 +176,115 @@
         <li>zmq - wizardry, tcp on steroids</li>
         <li>stomp - text based protocol (more later)</li>
     </ul></slide>
+    
+    <slide><ul>
+    </ul></slide>
 
     <slide><ul>
-        <li>streams are slow</li>
+        <li>stream_select is slow</li>
         <li>libevent handles thousands</li>
+        <li>libevent was created to solve C10K problem</li>
+        <li>libev modelled after libevent without "limitations or bugs"</li>
+        <li>libuv made by Joyent for node, libev API but for Windows</li>
     </ul></slide>
 
     <slide><ul>
-        <li>that's how you talk to processes, but what good is it?</li>
-        <li>how systems agree to communicate with eachother</li>
-        <li>unstructured, raw data</li>
+        <li>Who's ever written something (in any language) where you want to do things in a row?</li>
+    </ul></slide>
+
+    <slide><ul>
+        <li>A promise like a one time stream (go look up quote)</li>
+        <li>instead of callbacks you're giving a promise object</li>
+        <li>at some point it will be fulfilled or broken</li>
+        <li>The server can choose to respond to it at any time</li>
+        <li>The promise can be reused and the work is only done once</li>
+        <li>Memoization</li>
+    </ul></slide>
+    
+    <slide><ul>
+        <li>Connecting to a server using a URL makes 2 calls</li>
+        <li>First a DNS lookup needs to be done</li>
+        <li>PHP/TCP by default is blocking</li>
+        <li>goto: 28</li>
+    </ul></slide>
+    
+    <slide><ul>
+        <li>Once a promise has been completed the value is restored but the API remains the same</li>
+    </ul></slide>
+    
+    <slide><ul>
+        <li>The deferred object is behind the scenes of a promise</li>
     </ul></slide>
 
     <slide><ul>
     </ul></slide>
 
     <slide><ul>
-        <li>Igor wrote async DNS for PHP</li>
+        <li>Don't keep any state by storing variables</li>
+        <li>Helps prevent race conditions</li>
+        <li>Async, the requests are made in parallel</li>
+    </ul></slide>
+    
+    <slide><ul>
+        <li>Streams are an API wrapper for handling I/O</li>
+        <li>This could be the filesystem or sockets (here it's sockets)</li>
+        <li>Makes manipulating data for connections easier</li>
+    </ul></slide>
+
+    <slide>(ReadableStreamInterface)<ul>
+    </ul></slide>
+
+    <slide>(WritableStreamInterface)<ul>
+    </ul></slide>
+
+    <slide><ul>
+        <li>0.4 coming soon</li>
+        <li>Fushion</li>
     </ul></slide>
 
     <slide><ul>
     </ul></slide>
 
     <slide><ul>
-        <li>don't worry!</li>
     </ul></slide>
 
     <slide><ul>
-        <li>What we just saw but over web browsers</li>
+        <li>Most often used by and meant for browsers</li>
+        <li>But HTTP is stateless, how does this work?</li>
     </ul></slide>
 
     <slide><ul>
-        <li>...</li>
+        <li>Remember stateless request/response that is HTTP</li>
+        <li>Hold open an HTTP connection like a door</li>
+        <li>Decide to speak a different protocol</li>
     </ul></slide>
 
     <slide><ul>
-        <li></li>
+        <li>Take a stateful protocol like TCP</li>
+        <li>Create a stateless protocol on top of it like HTTP</li>
+        <li>Make that stateless protocol stateful by not closing it</li>
+    </ul></slide>
+
+    <slide><ul>
+        <li>Show debug inspector WebSocket request</li>
+    </ul></slide>
+
+    <slide><ul>
+        <li>It's all about the protocol</li>
+        <li>But that's not important to most developers</li>
+        <li>The API is what's important (until something breaks)</li>
+    </ul></slide>
+
+    <slide><ul>
+        <li>So what can we do with this technology?</li>
+        <li>Live data to/from users</li>
+        <li>draw something</li>
+    </ul></slide>
+
+    <slide><ul>
+        <li>any takers?</li>
+        <li>Talk is on Ratchet but principles are language agnostic</li>
+        <li>Built on top of React</li>
     </ul></slide>
 
     <slide><ul>
@@ -192,17 +293,14 @@
     </ul></slide>
 
     <slide><ul>
-        <li>decorator pattern, layers, unix philosophy</li>
-        <li>allows it to be future proof</li>
-        <li>I/O is binding to React's javascript api</li>
-    </ul></slide>
-
-    <slide><ul>
         <li>events are triggered on both server and client side</li>
     </ul></slide>
 
     <slide><ul>
-        <li>copy/paste</li>
+    </ul></slide>
+
+    <slide><ul>
+        <li>copy/paste for demo</li>
     </ul></slide>
 
     <slide><ul>
@@ -215,11 +313,22 @@
 
     <slide><ul>
         <li>binding class to reactor</li>
-        <li>demo app code, show decorator, routing</li>
+        <li>demo app code, show decorator, routing, PIE not NIH</li>
         <li>0.3 only</li>
         <li>still just raw, unstructured, data</li>
+        <li>Real facade</li>
     </ul></slide>
 
+    <slide><ul>
+        <li>decorator pattern, layers, unix philosophy</li>
+        <li>allows it to be future proof</li>
+        <li>I/O is binding to React's javascript api</li>
+        <li>StackPHP?</li>
+    </ul></slide>
+
+    <slide><ul>
+    </ul></slide>
+    
     <slide><ul>
         <li>python guy hasn't heard of windows</li>
     </ul></slide>
@@ -245,20 +354,66 @@
         <li>Show topic code</li>
     </ul></slide>
     
-    <slide></slide>
-
     <slide><ul>
-        <li></li>
+        <li>copy/paste for demo</li>
+    </ul></slide>
+    
+    <slide><ul>
+        <li>Any volunteers?</li>
+        <li>JavaScript client library exists</li>
     </ul></slide>
 
     <slide><ul>
+    </ul></slide>
+    
+    <slide><ul>
+    </ul></slide>
+    
+    <slide><ul>
+        <li>May be blocked by some proxies, 3 second wait</li>
     </ul></slide>
 
     <slide><ul>
         <li>Flash universally supported, including Ratchet</li>
-        <li>May be blocked by some proxies, 3 second wait</li>
         <li>SockJS tries WS, falls back to other HTTP methods</li>
         <li>Socket.IO opens long polling, opens second WebSocket conn, wasteful</li>
+    </ul></slide>
+
+    <slide><ul>
+        <li>SSL is too slow, unix philosophy</li>
+        <li>Proxies take care of things like timeouts</li>
+    </ul></slide>
+
+    <slide><ul>
+        <li>Carries messages across inproc, IPC, TCP, and multicast.</li>
+        <li>Connect N-to-N via fanout, pubsub, pipeline, request-reply.</li>
+        <li>Asynch I/O for scalable multicore message-passing apps.</li>
+        <li>Large and active open source community.</li>
+        <li>One language library with bindings for 40+ languages</li>
+    </ul></slide>
+
+    <slide><ul>
+    </ul></slide>
+
+    <slide><ul>
+        <li>5000 concurrent connections</li>
+        <li>Right tool for the right job</li>
+        <li>If you're not already polyglot maintaining another lang is a cost</li>
+    </ul></slide>
+
+    <slide><ul>
+        <li>When should you opt for a different language?</li>
+        <li>When PHP isn't enough</li>
+        <li>Node isn't necessarily the answer</li>
+    </ul></slide>
+
+    <slide><ul>
+        <li>Communicate with other running applications via sockets + a protocol</li>
+        <li>Canned solutions are available</li>
+        <li>Pusher, RabbitMQ</li>
+    </ul></slide>
+
+    <slide><ul>
     </ul></slide>
 
     <slide><ul>
@@ -266,8 +421,21 @@
         <li>Ratchet 0.1 on socketo.me -- React disconnect + GC faster than Ratchet ->detach()</li>
     </ul></slide>
 
+<!--
     <slide><ul>
-        <li>c</li>
+    </ul></slide>
+-->
+
+    <slide><ul>
+        <li>HHVM requires libevent but doesn't expose an API for it</li>
+        <li>soon?</li>
+        <li>Sessions are currently blocking :(</li>
+        <li>Socket.IO has progress</li>
+        <li>Binary message support is in the code, not the API</li>
+        <li>API's are hard</li>
+    </ul></slide>
+
+    <slide><ul>
     </ul></slide>
 
     <div id="slideCounter">
@@ -277,18 +445,29 @@
 </body>
     <script>var addPath = '/notes';</script>
 
-    <script src="scripts/jquery-1.9.1.js"></script>
-    <script src="scripts/autobahnjs/autobahn.js"></script>
-    <script src="scripts/when/when.js"></script>
-    <script src="scripts/angular.js" ng:autobind></script>
-    <script src="syntaxhighlighter/shCore.js"></script>
-    <script src="syntaxhighlighter/shBrushJScript.js"></script>
-    <script src="syntaxhighlighter/shBrushXml.js"></script>
+    <script>
+        var addPath = '';
+        window.define = function(factory) {
+            try{ delete window.define; } catch(e){ window.define = void 0; } // IE
+            window.when = factory();
+        };
+        window.define.amd = {};
+    </script>
 
-    <link rel="stylesheet" href="style.css" type="text/css">
-    <link rel="stylesheet" href="css/shCore.css" type="text/css">
-    <link rel="stylesheet" href="css/shThemeDefault.css" type="text/css">
-    <link rel="stylesheet" href="css/presentation.css" type="text/css">
+    <script src="bower_components/when/when.js"></script>
+    <script src="bower_components/autobahnjs/autobahn/autobahn.js"></script>
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+    <script src="bower_components/SyntaxHighlighter/scripts/XRegExp.js"></script>
+    <script src="bower_components/SyntaxHighlighter/scripts/shCore.js"></script>
+    <script src="bower_components/SyntaxHighlighter/scripts/shBrushJScript.js"></script>
+    <script src="bower_components/SyntaxHighlighter/scripts/shBrushXml.js"></script>
+    <script src="bower_components/SyntaxHighlighter/scripts/shBrushPhp.js"></script>
+    
+    <link rel="stylesheet" href="styles/fonts.css" type="text/css">
+    <link rel="stylesheet" href="bower_components/SyntaxHighlighter/styles/shCore.css" type="text/css">
+    <link rel="stylesheet" href="bower_components/SyntaxHighlighter/styles/shThemeDefault.css" type="text/css">
+    <link rel="stylesheet" href="styles/presentation.css" type="text/css">
 
     <script src="scripts/slide.js"></script>
     <script src="scripts/slide-directives.js"></script>
