@@ -1,0 +1,690 @@
+<!doctype html>
+<html lang="en" xmlns:ng="http://angularjs.org/" ng-app="slides">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>React</title>
+</head>
+
+<body ng-controller="SlideCtrl" slideshow ng-cloak>
+
+    <slide title="Reacting: Evented programming in PHP" class="react" state="intro">
+        <div class="center">
+
+
+
+            <img src="img/logo.png" />
+
+        
+
+
+
+
+
+
+        <p class="left">http://{{host}}</p><p class="right">by: Chris Boden</p>
+        </div>
+    </slide>
+    
+
+    <slide title="Hello World!"><center><img src="img/hello.png"></center>
+        <p class="right smaller">But what if I told you...</p>
+    </slide>
+
+    <slide title="You are a slave" class="dark smaller">
+
+        <center><img src="img/pills.png"></center>
+
+
+        <p class="right">CGI is the world that has been pulled over your eyes to blind you from the truth</p>
+    </slide>
+
+    <slide title="What happens?" class="protocol">
+
+
+
+
+
+
+
+
+
+                    Request: http://{{host}}/hello.php
++------------------+                                               +------------------+
+|                  |----------------------------------------------&gt;|                  |
+|                  |                                               |                  |
+|      Client      |                                               |      Server      |
+|                  |                                               |                  |
+|                  |&lt;----------------------------------------------|                  |
++------------------+                                               +------------------+
+                                       Response: You can haz &lt;HTML&gt; 
+
+
+<!--         <center><img src="img/request-response.png"></center> -->
+    </slide>
+
+    <slide title="What's in a message?" class="protocol">
+
+
+
+
+
+                        +------------------------------------------------------+
+                        | The entity of an HTTP message                        |
+                        |                                                      |
+                        |    +-------------------------------------------------+
+                        |    | TCP                                             |
+                        |    |                                                 |
+                        |    |    +--------------------------------------------+
+                        |    |    | HTTP                                       |
+                        |    |    |                                            |
+                        |    |    |    +---------------------------------------+
+                        |    |    |    | Format                                |
+                        |    |    |    |                                       |
+                        |    |    |    |    +----------------------------------+
+                        |    |    |    |    | Content                          |
+                        |    |    |    |    |                                  |
+                        |    |    |    |    |                                  |
+                        |    |    |    |    |                                  |
+                        |    |    |    |    |                                  |
+                        |    |    |    |    |                                  |
+                        |    |    |    |    |                                  |
+                        |    |    |    |    |                                  |
+                        |    |    |    |    |                                  |
+                        +----+----+----+----+----------------------------------+
+<!--         <center><img src="img/chain.png"></center> -->
+    </slide>
+
+    <slide title="Follow the white rabbit (arrows)">
+        <center><img src="img/cgi.png"></center>
+    </slide>
+
+    <slide title="How does a socket work?"><ul>
+            <li>Client connects to server</li>
+            <li>Server accepts connection</li>
+            <li>Client/Server send messages to eachother</li>
+        </ul>
+
+        <img class="right" src="img/phone.png">
+    </slide>
+
+    <slide title="Opening your eyes" class="terminal smaller">
+        <p><span class="generated">$</span> curl -v http://{{host}}/hello.php</p>
+        <pre class="smaller generated">* About to connect() to {{host}} port 80 (#0)
+*   Trying {{host}}...
+* connected
+* Connected to {{host}} ({{host}}) port 80 (#0)
+&gt; GET /hello.php HTTP/1.1
+&gt; User-Agent: curl/7.24.0 OpenSSL/0.9.8r zlib/1.2.5
+&gt; Host: {{host}}
+&gt; Accept: */*
+&gt; 
+&lt; HTTP/1.1 200 OK
+&lt; Content-Type: text/html
+&lt; 
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;&lt;body&gt;
+&lt;div&gt;etc, etc
+</pre>
+    </slide>
+
+    <slide title="Deeper into the rabbit hole" class="terminal">
+        <pre><span class="generated">$</span> telnet {{host}} 80
+<span class="generated">Trying {{ip}}...
+Connected to {{host}}.
+Escape character is '^]'.</span>
+GET / HTTP/1.1
+Host: {{host}}
+⏎
+
+
+
+<span class="generated">(no telnet? use nc)</span></pre>
+    </slide>
+
+    <slide title="PHP webserver" class="terminal smaller">
+        <span class="generated">$</span> php -S 0.0.0.0:8000 alice.php
+
+
+        <span class="generated">(in another term - server takes control of env)</span>
+        <span class="generated">$</span> curl -v http://{{host}}:8000
+
+        <pre class="generated">*   Trying {{host}}...
+* Connected to {{host}} ({{host}}) port 8000 (#0)
+> GET / HTTP/1.1
+> User-Agent: curl/7.27.0
+> Host: {{host}}:8000
+> 
+&lt; HTTP/1.1 200 OK
+&lt; Host: {{host}}:8000
+&lt; Connection: close
+&lt; Content-type: text/html
+&lt; 
+5.4.6-1ubuntu1.2
+</pre>
+    </slide>
+
+    <slide title="Stop!">
+        <div class="center">
+            <img src="img/php-hammer.jpg">
+
+
+            <h3>Hammer time!</h3>
+        </div>
+    </slide>
+
+    <slide title="Synchronous/blocking processing">
+        <div class="center">
+            <img src="img/dmv.gif">
+        </div>
+
+        <p class="smaller">The server processes incoming requests one at a time, in a queue manner.</p>
+    </slide>
+
+    <slide title="Blocking has purpose">
+        <pre class="code-only highlight: [3, 4]; brush: php">&lt;?php
+$db = new mysqli($host, $user, $pass, $name);
+$r = $db->query("SELECT aRow FROM table LIMIT 1");
+$d = $r->fetch_assoc();
+print_r($d);</pre>
+
+
+        <p>Wouldn't that suck if print_r($d); happened before MySQL returned your row?</p>
+    </slide>
+
+    <slide title="The event loop">
+        <pre class="code-only">while (true) {
+    // do things
+}</pre><center><img src="img/event-loop.png"></center>
+    </slide>
+
+    <slide title="The Unix Philosophy">
+
+        <center>
+        <blockquote>Rule of Composition: Developers should write programs that can communicate easily with other programs. This rule aims to allow developers to break down projects into small, simple programs rather than overly complex monolithic programs.</blockquote>
+        </center>
+    </slide>
+
+    <slide title="In practice">
+        <div class="center">
+            <img src="img/assembly-line.jpg">
+        </div>
+    </slide>
+
+<!--
+    <slide title="Free your mind" class="terminal smaller">
+        <span class="generated">$</span> mkfifo proxypipe
+        <span class="generated">$</span> while true; do cat proxypipe | nc -l 0.0.0.0 8080 | tee -a in-proxy.txt | nc localhost 8000 | tee -a out-proxy.txt 1>proxypipe; done
+    </slide>
+-->
+
+    <slide title="What is the Reactor pattern?">
+
+
+        <center><blockquote>The Reactor design pattern handles service requests that are delivered concurrently to the application by one or more clients.
+
+        Each service in an application may consist of several methods and is represented by a separate event handler that is responsible for dispatching service-specific requests.</blockquote></center>
+    </slide>
+
+    <slide class="dark">
+
+
+        <center><img src="img/telephone-operator.jpg"></center>
+    </slide>
+    
+    <slide>
+        <center>
+            <blockquote class="twitter-tweet" lang="en"><p><a href="https://twitter.com/search?q=%23reactphp&amp;src=hash">#reactphp</a> for those php developers to lazy to learn javascript and nodejs.</p>&mdash; Ben Carter (@BenCarterDev) <a href="https://twitter.com/BenCarterDev/statuses/400454234069815296">November 13, 2013</a></blockquote>
+            
+            <blockquote class="twitter-tweet" lang="en"><p>If it quacks like a duck, but looks like a cat with a horse head, it must be JavaScript.</p>&mdash; Rodney Rehm (@rodneyrehm) <a href="https://twitter.com/rodneyrehm/statuses/398053479669055488">November 6, 2013</a></blockquote>
+        </center>
+    </slide>
+
+    <slide title="React is:">
+        <ul>
+            <li>Asynchronous (non-blocking)</li>
+            <li>Event Driven</li>
+            <li>PSR-0 -- on <a href="http://packagist.org/packages/react/react" target="_blank">Packagist</a> -- on <a href="https://github.com/reactphp/react" target="_blank">GitHub</a> -- <a href="https://travis-ci.org/reactphp/react" target="_blank">unit tested</a></li>
+            <li>Fun</li>
+        </ul>
+    </slide>
+
+<!--     <slide><img src="img/get-on-with-it.jpg" class="center"></slide> -->
+
+    <slide>
+
+
+
+        <center>    
+            <blockquote class="twitter-tweet" lang="en"><p>If you&#39;re writing a daemon and PHP leaks memory, with 99.9% probability it&#39;s your own fault. PHP just can&#39;t free values you still reference.</p>&mdash; Nikita Popov (@nikita_ppv) <a href="https://twitter.com/nikita_ppv/statuses/384634404103929856">September 30, 2013</a></blockquote>
+        </center>
+    </slide>
+
+    <slide title="getcomposer.org" class="smallerCode">
+        <div class="half right"><img src="img/composer.png"></div>
+<div class="half left">
+        <pre class="code-only">{
+    "require": {
+        "react/socket": "0.3.*"
+    }
+}</pre>
+</div>
+    <div class="clear"></div>
+
+
+    <p class="smaller terminal">&gt;&gt; composer.json
+        <span class="generated">$</span> curl -sS https://getcomposer.org/installer | php
+        <span class="generated">$</span> composer install
+    </p>
+    </slide>
+
+    <slide title="Through the looking glass" class="smallerCode"><pre class="code-only brush: php">&lt;?php
+require __DIR__ . '/vendor/autoload.php';
+
+$loop = React\EventLoop\Factory::create();
+$socket = new React\Socket\Server($loop);
+
+$socket->on('connection', function ($conn) {
+    echo "{$conn->stream} connected\n";
+    $conn->on('data', function ($data) use ($conn) {
+        echo "{$conn->stream} says '{$data}'";
+        $conn->write("You said: {$data}");
+    });
+});
+
+$socket->listen(1337, '0.0.0.0');
+$loop->run();</pre>
+        <p class="terminal"><span class="generated">$</span> php goodbye-kansas.php</p>
+    </slide>
+
+    <slide class="smallerCode"><pre class="code-only brush: php">&lt;?php
+require __DIR__.'/../vendor/autoload.php';
+
+$loop   = React\EventLoop\Factory::create();
+$socket = new React\Socket\Server($loop);
+$conns  = new \SplObjectStorage();
+
+$socket->on('connection', function($conn) use ($conns) {
+    $conns->attach($conn);
+
+    $conn->on('data', function($data) use ($conns, $conn) {
+        foreach ($conns as $current) {
+            if ($conn === $current) {
+                continue;
+            }
+
+            $current->write($conn->getRemoteAddress().': ');
+            $current->write($data);
+        }
+    });
+    $conn->on('end', function () use ($conns, $conn) {
+        $conns->detach($conn);
+    });
+});
+$socket->listen(9000);
+$loop->run();</pre></slide>
+
+    <slide title="Nuke that reactor (insert in prev script)" class="smallerCode">
+        <pre class="code-only highlight: [1,13]; brush: php">$socket->listen(9000);
+$sock2_electric_boogaloo = new React\Socket\Server($loop);
+
+$sock2_electric_boogaloo->on('connection', function($conn) use ($conns) {
+    $conn->on('data', function($data) use ($conns, $conn) {
+        foreach ($conns as $o_conn) {
+            $from = $conn->getRemoteAddress();
+            $o_conn->write("Msg from {$from}:9001 -> {$data}");
+        }
+    });
+});
+
+$sock2_electric_boogaloo->listen(9001);
+$loop->run();</pre>
+        <p>React lets you easily traffic data between services and connections.</p>
+    </slide>
+
+    <slide title="pro&bull;to&bull;col">
+        <center><blockquote>A standard procedure for regulating data transmission between computers.</blockquote></center>
+
+        <p class="terminal">110111000101011101101000012</p>
+
+
+        <center><blockquote>English, mother!@#$er, do you speak it?</blockquote></center>
+
+        <a href="https://igor.io/2012/09/24/binary-parsing.html" target="_blank">@igorwhiletrue on binary parsing in php</a>
+    </slide>
+
+    <slide title="JSON RFC4627">
+
+
+<pre class="code-only">{
+    "what": ["this", "is", "a", "JSON", "object"],
+    "how": {"Protocol format": "is plain text"},
+    "making": {
+        "it": {
+            "easy":  ["to", "read"],
+            "for": "humans"
+        }
+    },
+    "random-number": 2
+}</pre>
+    </slide>
+
+    <slide title="DNS RFC1035" class="protocol">
+
+
+                                                1  1  1  1  1  1
+                  0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5
+                +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+                |                                               |
+                /                                               /
+                /                      NAME                     /
+                |                                               |
+                +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+                |                      TYPE                     |
+                +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+                |                     CLASS                     |
+                +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+                |                      TTL                      |
+                |                                               |
+                +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+                |                   RDLENGTH                    |
+                +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--|
+                /                     RDATA                     /
+                /                                               /
+                +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+    </slide>
+
+    <slide title="SPDY-00 draft" class="protocol">
+
+
+                    +------------------------------------+
+                    |1|    version    |         1        |
+                    +------------------------------------+
+                    |  Flags (8)  |  Length (24 bits)    |
+                    +------------------------------------+
+                    |X|           Stream-ID (31bits)     |
+                    +------------------------------------+
+                    |X| Associated-To-Stream-ID (31bits) |
+                    +------------------------------------+
+                    | Pri|Unused | Slot |                |
+                    +-------------------+                |
+                    | Number of Name/Value pairs (int32) |
+                    +------------------------------------+
+                    |     Length of name (int32)         |
+                    +------------------------------------+
+                    |           Name (string)            |
+                    +------------------------------------+
+                    |     Length of value  (int32)       |
+                    +------------------------------------+
+                    |          Value   (string)          |
+                    +------------------------------------+
+                    |           (repeats)                |
+    </slide>
+    
+    <slide title="Redis" class="protocol">
+    
+    
+    
+*&lt;number of arguments&gt; CR LF
+$&lt;number of bytes of argument 1&gt; CR LF
+&lt;argument data&gt; CR LF
+...
+$&lt;number of bytes of argument N&gt; CR LF
+&lt;argument data&gt; CR LF
+    </slide>
+        
+    <slide title="(a few) React libraries"><ul><li><a href="https://github.com/reactphp/event-loop" target="_blank">event-loop</a></li><li><a href="https://github.com/reactphp/socket" target="_blank">socket</a></li><li><a href="https://github.com/reactphp/stream" target="_blank">stream</a></li><li><a href="https://github.com/reactphp/promise" target="_blank">promise</a></li><li><a href="https://github.com/reactphp/dns" target="_blank">dns</a></li><li><a href="https://github.com/reactphp/zmq" target="_blank">zmq</a></li><li><a href="https://github.com/reactphp/stomp" target="_blank">stomp</a><li><a href="https://github.com/reactphp/http" target="_blank">http</a></li><li><a href="https://github.com/reactphp/http-client" target="_blank">http-client</a></li><li><a href="https://github.com/reactphp/socket-client" target="_blank">socket-client</a></li></li></ul></slide>
+            
+    <slide title="LoopInterface" class="smallerCode"><pre class="code-only">&lt;php
+namespace React\EventLoop;
+use React\EventLoop\Timer\TimerInterface;
+
+interface LoopInterface {
+    public function addReadStream($stream, $listener);
+    public function addWriteStream($stream, $listener);
+
+    public function removeReadStream($stream);
+    public function removeWriteStream($stream);
+    public function removeStream($stream);
+
+    public function addTimer($interval, $callback);
+    public function addPeriodicTimer($interval, $callback);
+    public function cancelTimer(TimerInterface $timer);
+    public function isTimerActive(TimerInterface $timer);
+
+    public function tick();
+    public function run();
+    public function stop();
+}</pre></slide>
+
+    <slide title="React\LoopInterface">
+        <ul>
+            <li>StreamSelectLoop -- works on all systems</li>
+            <li>LibEventLoop -- currently best option</li>
+            <li>LibEvLoop -- Added in 0.3</li>
+            <li>LibUvLoop -- testing in PR</li>
+            <li>EventLoop -- testing in PR</li>
+        </ul>
+    </slide>
+    
+    <slide>
+
+
+        <!-- may have to replace with image -->
+        <center>
+            <blockquote class="twitter-tweet" lang="en"><p>The film Inception is just trying to explain &quot;callback hell&quot; via a more mainstream medium.</p>&mdash; I Am Devloper (@iamdevloper) <a href="https://twitter.com/iamdevloper/statuses/382622813049614336">September 24, 2013</a></blockquote>
+        </center>
+    </slide>
+    
+    <slide title="Promises" class="protocol">
+
+
+
+
+
+
+
+              _  _
+             /_\/_\                                             :) Fulfilled 
+     +=======\_\/_/=======+                                    +-------------
+     |        //\\\------+|                                   /
+     |       //  ||to you||   (time passing)                 /
+     |        |  |+------+|--------------------------------->
+     |        |  |        |   Do not open until Christmas    \
+     |        |  |        |                                   \
+     +====================+                                    +-------------
+                                                                :(  Rejected
+
+    </slide>
+    
+    <slide title="DNS Promise">
+    
+<pre class="code-only brush: php">&lt;?php
+
+$loop = React\EventLoop\Factory::create();
+$factory = new React\Dns\Resolver\Factory();
+$dns = $factory->create('8.8.8.8', $loop);
+
+$dns
+    ->resolve('reactphp.org')
+    ->then(function($ip) {
+        echo "Host: $ip\n";
+    });
+    </pre></slide>
+    
+    <slide title="Reuse the Result">
+<pre class="code-only brush: php">&lt;?php
+
+$loop = React\EventLoop\Factory::create();
+$factory = new React\Dns\Resolver\Factory();
+$dns = $factory->create('8.8.8.8', $loop);
+
+$dnsPromise = $dns->resolve('reactphp.org');
+
+$dnsPromise->then(function($ip) {
+    echo "Host: $ip\n";
+});
+
+$dnsPromise->then(function($ip) {
+    // do something else with the result
+    // no extra I/O
+});
+    </pre></slide>
+    
+    <slide title="The Deferred object" class="protocol">
+
+
+
+
+
+
+                         +-----------------------------+
+                         |                             |
+                         |          Deferred           |
+                         |                             |
+                         +--------------+--------------+
+                         |              |              |
+                         |    Promise   |   Resolver   |
+                         |              |              |
+                         +--------------+--------------+
+                                 |              |
+                                 |              |
+                                 |              |
+                                 V              V
+                              Consumer       Producer
+                               * then()       * resolve()
+                                              * reject()
+    </slide>
+    
+    <slide title="Internally managing a promise" class="smallerCode"><pre class="code-only brush: php">&lt;?php
+$randomPromise = function(React\EventLoop\LoopInterface $loop) {
+    $deferred = new React\Promise\Deferred();
+     
+    $loop->addTimer(1, function() use ($deferred) {
+        $num = rand();
+        if (0 === $num % 2) {
+            return $deferred->resolve($num);
+        }
+        $deferred->reject($num);
+    });
+ 
+    return $deferred->promise();
+};
+
+$loop = React\EventLoop\Factory::create();
+$randomPromise($loop)->then(function($num) {
+    echo "Promise resolved with even {$num}\n";
+}, function($num) {
+    echo "Promise was rejected with odd {$num}\n";
+});
+
+$loop->run();
+    </pre></slide>
+    
+    <slide title="Wait For It..." class="smallerCode">
+    
+    
+<pre class="code-only brush: php">&lt;?php
+$user = "Robert'); DROP TABLE users;";
+
+$hP  = \Fake\asyncRest("http://api.example.com/{$user}");
+$qP  = \Fake\asyncQ("SELECT * FROM `users` WHERE `user` = {$user}");
+
+React\Promise\all([$hP, $qP])->then(function($results) {
+    list($httpResult, $queryResult) = $results;
+
+    // Compare data, sync if necessary
+});
+    </pre></slide>
+    
+    <slide title="Streams and the Stream API">
+        <ul>
+            <li>Wraps a PHP Stream resource</li>
+            <li>Registers with the EventLoop</li>
+            <li>Readable and/or Writable</li>
+            <li>Bufferes data</li>
+        </ul>
+    </slide>
+    
+    <slide title="ReadableStreamInterface">
+        <ul>
+            <li>bool isReadable()</li>
+            <li>pause()</li>
+            <li>resume()</li>
+            <li>pipe(WritableStreamInterface $dest)</li>
+            <li>close()</li>
+        </ul>
+    </slide>
+
+    <slide title="WritableStreamInterface">
+        <ul>
+            <li>isWritable()</li>
+            <li>write($data)</li>
+            <li>end($data = null)</li>
+            <li>close()</li>
+        </ul>
+    </slide>
+
+    <slide title="Coming soon"><ul><li>ChildProcess (thanks <a href="https://twitter.com/jmikola" target="_blank">@jmikola</a>)</li>
+            <li>EvnetLoopInterface::nextTick() (thanks <a href="https://twitter.com/jmalloc" target="_blank">@jmalloc</a>)</li>
+            <li>New A+ Promise API - ALL THE THINGS! (thanks <a href="https://twitter.com/jansor" target="_blank">@jansor</a>)</li>
+            <li>UDP support (thanks <a href="https://twitter.com/another_clue" target="_blank">@another_clue</a>)</li>
+            <li>Refactored EventLoopInterface API</li>
+            <li>refactored EventLoopInterface implementation</li>
+            <li>an easier framework?</li></ul></slide>
+            
+    <slide title="Questions?">
+
+
+
+
+
+        <ul>
+            <li><a href="https://joind.in/10436" target="_blank">https://joind.in/10436</a></li>
+            <li><a href="https://twitter.com/boden_c" target="_blank">@boden_c</a></li>
+            <li><a href="http://reactphp.org" target="_blank">reactphp.org</a></li>
+            <li><a href="https://github.com/cboden/presentr" target="_blank">Presentr</a></li></ul></slide>
+
+
+    <div id="slideCounter" ng-controller="OnlineCtrl">
+                         <span title="Live slideshow status">{{status}}</span> 
+        &nbsp; -- &nbsp; <span title="Slide number/total">{{currentSlide}} / {{slideCount}}</span> 
+        &nbsp; -- &nbsp; <span title="Peers on this slide/overall">{{peers}}/<span>{{connected}}</span></span>
+    </div>
+
+<!--
+    <div id="slideCounter">
+                         <span ng-controller="OnlineCtrl" title="Live slideshow status">{{status}}</span> 
+        &nbsp; -- &nbsp; <span title="Slide number/total">{{currentSlide}} / {{slideCount}}</span> 
+        &nbsp; -- &nbsp; <span title="Peers on this slide/overall">{{peers}}/<span ng-controller="OnlineCtrl">{{peers}}</span></span>
+    </div>
+-->
+</body>
+    <script>
+        var addPath = '';
+        window.define = function(factory) {
+            try{ delete window.define; } catch(e){ window.define = void 0; } // IE
+            window.when = factory();
+        };
+        window.define.amd = {};
+    </script>
+
+<!--     <script src="scripts/jquery-1.9.1.js"></script> -->
+    <script src="bower_components/when/when.js"></script>
+    <script src="bower_components/autobahnjs/autobahn/autobahn.js"></script>
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+    <script src="bower_components/SyntaxHighlighter/scripts/XRegExp.js"></script>
+    <script src="bower_components/SyntaxHighlighter/scripts/shCore.js"></script>
+    <script src="bower_components/SyntaxHighlighter/scripts/shBrushJScript.js"></script>
+    <script src="bower_components/SyntaxHighlighter/scripts/shBrushXml.js"></script>
+    <script src="bower_components/SyntaxHighlighter/scripts/shBrushPhp.js"></script>
+    <script async src="http://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    
+    <link rel="stylesheet" href="styles/fonts.css" type="text/css">
+    <link rel="stylesheet" href="bower_components/SyntaxHighlighter/styles/shCore.css" type="text/css">
+    <link rel="stylesheet" href="bower_components/SyntaxHighlighter/styles/shThemeDefault.css" type="text/css">
+    <link rel="stylesheet" href="styles/presentation.css" type="text/css">
+
+    <script src="scripts/slide.js"></script>
+    <script src="scripts/slide-directives.js"></script>
+</html>
